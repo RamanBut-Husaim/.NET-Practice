@@ -8,7 +8,7 @@ namespace Multithreading.Example
         public FluentCommandLineParser<Arguments> Create()
         {
             var parser = new FluentCommandLineParser<Arguments>();
-            parser.Setup(arg => arg.FileName)
+            parser.Setup(arg => arg.FileNames)
                 .As('f', "file")
                 .WithDescription("The path to the file.")
                 .Required();

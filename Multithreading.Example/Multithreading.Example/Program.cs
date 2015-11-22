@@ -22,11 +22,24 @@ namespace Multithreading.Example
                 return;
             }
 
+            foreach (var fileName in parser.Object.FileNames)
+            {
+                ProcessFile(fileName);
+            }
+
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+        }
+
+        private static void ProcessFile(string fileName)
+        {
+            Console.WriteLine("Start processing file '{0}'...", fileName);
+
             var fileContentProviderFactory = new FileContentProviderFactory();
 
             IEnumerable<string> fileStrings = Enumerable.Empty<string>();
 
-            using (var fileContentProvider = fileContentProviderFactory.Create(parser.Object.FileName))
+            using (var fileContentProvider = fileContentProviderFactory.Create(fileName))
             {
                 fileStrings = fileContentProvider.GetFileContent();
             }
@@ -61,7 +74,8 @@ namespace Multithreading.Example
             bool equal = sequentialResult.SequenceEqual(parallelResult);
 
             Console.WriteLine("The sequences are equal: {0}", equal);
-            Console.ReadLine();
+            Console.WriteLine("End processing file '{0}.'", fileName);
+            Console.WriteLine("---------------------------------------------------------------------------------------");
         }
 
         private static void WarmSequential(IEnumerable<string> strings)

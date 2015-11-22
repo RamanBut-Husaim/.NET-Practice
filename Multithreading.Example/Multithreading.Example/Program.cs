@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Fclp;
 using Multithreading.Example.Core;
@@ -30,13 +31,59 @@ namespace Multithreading.Example
                 fileStrings = fileContentProvider.GetFileContent();
             }
 
+            var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+
+            WarmSequential(fileStrings);
+            WarmParallel(fileStrings);
+
+            stopWatch.Stop();
+
+            stopWatch.Reset();
+
+            stopWatch.Start();
             var sequentialResult = ProcessSequential(fileStrings);
+            stopWatch.Stop();
+
+            Console.WriteLine("Elapsed time for sequential processing: {0}", stopWatch.ElapsedTicks.ToString());
+
+            stopWatch.Reset();
+
+            stopWatch.Start();
+
             var parallelResult = ProcessParallel(fileStrings);
+
+            stopWatch.Stop();
+
+            Console.WriteLine("Elapsed time for parallel processing: {0}", stopWatch.ElapsedTicks.ToString());
 
             bool equal = sequentialResult.SequenceEqual(parallelResult);
 
             Console.WriteLine("The sequences are equal: {0}", equal);
             Console.ReadLine();
+        }
+
+        private static void WarmSequential(IEnumerable<string> strings)
+        {
+            for (int i = 0; i < WarmCounter; ++i)
+            {
+                var fileProcessorFactory = new FileProcessorFactory();
+                var sequenceManager = new SequentialFileProcessorManager(fileProcessorFactory);
+
+                sequenceManager.ProcessFile(strings);
+            }
+        }
+
+        private static void WarmParallel(IEnumerable<string> strings)
+        {
+            for (int i = 0; i < WarmCounter; ++i)
+            {
+                var fileProcessorFactory = new FileProcessorFactory();
+                var sequenceManager = new ParallelFileProcessorManager(fileProcessorFactory);
+
+                sequenceManager.ProcessFile(strings);
+            }
         }
 
         private static IEnumerable<string> ProcessSequential(IEnumerable<string> strings)

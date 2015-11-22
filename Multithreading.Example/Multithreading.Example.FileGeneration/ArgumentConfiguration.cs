@@ -15,12 +15,12 @@ namespace Multithreading.Example.FileGeneration
 
             parser.Setup(arg => arg.LineCount)
                 .As('l', "lineCount")
-                .WithDescription("The numbers of lines with numbers in the result file. Default is 12")
+                .WithDescription("Optional. The number of lines in the result file. Default is 12.")
                 .SetDefault(12);
 
             parser.Setup(arg => arg.NumbersPerLine)
                 .As('n', "numbersPerLine")
-                .WithDescription("How many numbers will be placed in the line. Default is 30")
+                .WithDescription("Optional. How many numbers will be placed in the line. Default is 30.")
                 .SetDefault(30);
 
             parser.SetupHelp("?", "help")

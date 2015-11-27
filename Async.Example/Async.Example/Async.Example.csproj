@@ -60,15 +60,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Downloader.cs" />
+    <Compile Include="Model\DownloaderFactory.cs" />
     <Compile Include="Model\UrlValidator.cs" />
+    <Compile Include="ViewModel\AsyncCommand.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\DownloaderViewModel.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
+    <Compile Include="ViewModel\OperationResult.cs" />
     <Compile Include="View\AsyncWindow.xaml.cs">
       <DependentUpon>AsyncWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DownloaderControl.xaml.cs">
       <DependentUpon>DownloaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OperationResultTextBox.xaml.cs">
+      <DependentUpon>OperationResultTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UrlInput.xaml.cs">
+      <DependentUpon>UrlInput.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +113,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DownloaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OperationResultTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UrlInput.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

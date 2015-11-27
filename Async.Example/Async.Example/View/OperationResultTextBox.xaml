@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Async.Example.View.OperationResultTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ViewModel="clr-namespace:Async.Example.ViewModel"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance ViewModel:DownloaderViewModel}">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="OperationCompletedSuccessfullyColorBrush" Color="ForestGreen"></SolidColorBrush>
+        <SolidColorBrush x:Key="OperationFailedColorBrush" Color="Red"></SolidColorBrush>
+        <SolidColorBrush x:Key="OperationAbortedColorBrush" Color="Coral"></SolidColorBrush>
+        <system:String x:Key="OperationCompletedMessage">The operation has been completed successfully.</system:String>
+        <system:String x:Key="OperationAbortedMessage">The operation has been aborted.</system:String>
+        <system:String x:Key="OperationFailedMessage">The operation has completed with errors.</system:String>
+    </UserControl.Resources>
+    <TextBox Margin="5" IsReadOnly="True">
+        <TextBox.Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Foreground" Value="{StaticResource OperationCompletedSuccessfullyColorBrush}"></Setter>
+                <Setter Property="Text" Value=""></Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding OperationResult, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static ViewModel:OperationResult.Success}">
+                        <Setter Property="Foreground" Value="{StaticResource OperationCompletedSuccessfullyColorBrush}"></Setter>
+                        <Setter Property="Text" Value="{StaticResource OperationCompletedMessage}"></Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding OperationResult, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static ViewModel:OperationResult.Aborted}">
+                        <Setter Property="Foreground" Value="{StaticResource OperationAbortedColorBrush}"></Setter>
+                        <Setter Property="Text" Value="{StaticResource OperationAbortedMessage}"></Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding OperationResult, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static ViewModel:OperationResult.Failed}">
+                        <Setter Property="Foreground" Value="{StaticResource OperationFailedColorBrush}"></Setter>
+                        <Setter Property="Text" Value="{StaticResource OperationFailedMessage}"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBox.Style>
+    </TextBox>
+</UserControl>

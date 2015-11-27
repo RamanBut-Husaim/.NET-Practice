@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Async.Example.View.UrlInput"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ViewModel="clr-namespace:Async.Example.ViewModel"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance ViewModel:DownloaderViewModel}">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="ValidUrlColorBrush" Color="Azure"></SolidColorBrush>
+        <SolidColorBrush x:Key="InvalidUrlColorBrush" Color="Brown"></SolidColorBrush>
+    </UserControl.Resources>
+
+    <TextBox Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}" Margin="5">
+        <TextBox.Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Background" Value="{StaticResource ValidUrlColorBrush}"></Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsUrlValid, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                        <Setter Property="Background" Value="{StaticResource InvalidUrlColorBrush}"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+        </TextBox.Style>
+    </TextBox>
+</UserControl>

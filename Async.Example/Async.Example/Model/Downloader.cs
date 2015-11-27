@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Async.Example.Model
@@ -8,14 +9,16 @@ namespace Async.Example.Model
     public sealed class Downloader : IDisposable
     {
         private readonly WebClient _webClient;
+        private readonly IProgressNotifier _progressNotifier;
         private bool _disposed;
 
-        public Downloader()
+        public Downloader(IProgressNotifier progressNotifier)
         {
             _webClient = new WebClient();
+            _progressNotifier = progressNotifier;
         }
 
-        public async Task DownloadPagesAsync(IList<string> pages)
+        public async Task DownloadPagesAsync(IList<string> pages, CancellationToken token)
         {
             this.GuardDisposed();
 
@@ -24,20 +27,20 @@ namespace Async.Example.Model
                 throw new ArgumentNullException("pages");
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            var resultContent = new List<string>(pages.Count);
 
-            var resultContent = new List<string>();
-
-            foreach (var page in pages)
+            for (int i = 0; i < pages.Count; ++i)
             {
-                var content = await _webClient.DownloadStringTaskAsync(page);
+                token.ThrowIfCancellationRequested();
+                var content = await _webClient.DownloadStringTaskAsync(pages[i]);
                 resultContent.Add(content);
+                _progressNotifier.NotifyProgress(1);
             }
         }
 
         private void GuardDisposed()
         {
-            if (_disposed == true)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("The object has been disposed.");
             }

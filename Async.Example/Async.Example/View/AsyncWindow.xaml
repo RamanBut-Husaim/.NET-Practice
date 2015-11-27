@@ -6,7 +6,7 @@
         xmlns:ViewModel="clr-namespace:Async.Example.ViewModel"
         xmlns:View="clr-namespace:Async.Example.View"
         mc:Ignorable="d"
-        Title="AsyncWindow" Height="500" Width="300">
+        Title="AsyncWindow" Height="520" Width="300">
 
     <Window.DataContext>
         <ViewModel:DownloaderViewModel/>

@@ -14,12 +14,12 @@
         <view:UrlInput></view:UrlInput>
         <Label Foreground="Blue" Margin="5,5,5,0">URL List</Label>
         <ListBox ItemsSource="{Binding UrlList}" Height="200" Margin="5"/>
-        <Button Margin="5" Content="Clear List" Command="{Binding ClearUrlListCommand}"></Button>
         <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="5"/>
         <view:OperationResultTextBox></view:OperationResultTextBox>
         <Button IsEnabled="{Binding NotProcessing}" Command="{Binding AddUrlCommand}" Margin="5" Content="Add URL"/>
         <Button Margin="5" Command="{Binding DownloadPagesCommand}" Content="Download"/>
         <Button Margin="5" Content="Abort" Command="{Binding AbortCommand}" IsEnabled="{Binding Processing}"></Button>
+        <Button Margin="5" Content="Clear List" Command="{Binding ClearUrlListCommand}"></Button>
     </StackPanel>
 
 </UserControl>

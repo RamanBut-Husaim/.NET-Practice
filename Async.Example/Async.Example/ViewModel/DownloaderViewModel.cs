@@ -24,9 +24,7 @@ namespace Async.Example.ViewModel
         private bool _processing;
         private CancellationTokenSource _cancellationTokenSource;
         private bool _disposed;
-        private IProgressNotifier _progressNotifier;
         private double _progressValue;
-
 
         public DownloaderViewModel()
         {

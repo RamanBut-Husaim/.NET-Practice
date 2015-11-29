@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ViewModel="clr-namespace:Async.Example.ViewModel"
+             xmlns:viewModel="clr-namespace:Async.Example.ViewModel"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance ViewModel:DownloaderViewModel}">
+             d:DataContext="{d:DesignInstance viewModel:DownloaderViewModel}">
     <UserControl.Resources>
         <SolidColorBrush x:Key="ValidUrlColorBrush" Color="Azure"></SolidColorBrush>
         <SolidColorBrush x:Key="InvalidUrlColorBrush" Color="Brown"></SolidColorBrush>
@@ -21,7 +21,6 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-
         </TextBox.Style>
     </TextBox>
 </UserControl>

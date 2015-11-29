@@ -18,7 +18,7 @@
                 <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" IsEnabled="{Binding NotOperationInProgress}" Content="Download" Command="{Binding DownloadCommand}"></Button>
-            <Button Grid.Column="1" IsEnabled="{Binding OperationResult}" Content="Abort" Command="{Binding AbortCommand}"></Button>
+            <Button Grid.Column="1" IsEnabled="{Binding OperationInProgress}" Content="Abort" Command="{Binding AbortCommand}"></Button>
         </Grid>
     </StackPanel>
 </UserControl>

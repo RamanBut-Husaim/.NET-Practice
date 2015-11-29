@@ -20,7 +20,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button IsEnabled="{Binding NotProcessing}" Command="{Binding AddUrlCommand}" Margin="5" Content="Add URL"/>
+        <Button Command="{Binding AddUrlCommand}" Margin="5" Content="Add URL"/>
         <Button Margin="5" Content="Clear List" Command="{Binding ClearUrlListCommand}"></Button>
     </StackPanel>
 

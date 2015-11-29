@@ -61,6 +61,8 @@
     </Compile>
     <Compile Include="Model\Downloader.cs" />
     <Compile Include="Model\DownloaderFactory.cs" />
+    <Compile Include="Model\HashProvider.cs" />
+    <Compile Include="Model\HashProviderFactory.cs" />
     <Compile Include="Model\IProgressNotifier.cs" />
     <Compile Include="Model\ProgressNotifier.cs" />
     <Compile Include="Model\UrlValidator.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\DownloaderItemModel.cs" />
     <Compile Include="ViewModel\DownloaderViewModel.cs" />
+    <Compile Include="ViewModel\DownloadItemFactory.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\OperationResult.cs" />
     <Compile Include="View\AsyncWindow.xaml.cs">

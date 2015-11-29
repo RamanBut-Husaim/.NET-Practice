@@ -10,6 +10,7 @@ namespace Async.Example.ViewModel
     {
         private readonly string _url;
         private readonly DownloaderFactory _downloaderFactory;
+        private readonly HashProviderFactory _hashProviderFactory;
         private readonly AsyncCommand _downloadCommand;
         private readonly DelegateCommand _abortCommand;
 
@@ -17,11 +18,13 @@ namespace Async.Example.ViewModel
         private OperationResult _operationResult;
         private CancellationTokenSource _cancellationTokenSource;
         private bool _operationInProgress;
+        private string _pageHash;
 
-        public DownloaderItemModel(string url, DownloaderFactory downloaderFactory)
+        public DownloaderItemModel(string url, DownloaderFactory downloaderFactory, HashProviderFactory hashProviderFactory)
         {
             _url = url;
             _downloaderFactory = downloaderFactory;
+            _hashProviderFactory = hashProviderFactory;
 
             _downloadCommand = new AsyncCommand(this.DownloadWebContent);
             _abortCommand = new DelegateCommand(this.AbortDownload);
@@ -53,6 +56,16 @@ namespace Async.Example.ViewModel
             }
         }
 
+        public string PageHash
+        {
+            get { return _pageHash; }
+            set
+            {
+                _pageHash = value;
+                this.RaisePropertyChangedEvent(p => p.PageHash);
+            }
+        }
+
         public bool NotOperationInProgress
         {
             get { return !_operationInProgress; }
@@ -81,11 +94,13 @@ namespace Async.Example.ViewModel
             this.OperationInProgress = true;
 
             Downloader downloader = _downloaderFactory.Create();
+            HashProvider hashProvider = _hashProviderFactory.Create();
 
             try
             {
                 _cancellationTokenSource = new CancellationTokenSource();
-                await downloader.DownloadPagesAsync(_url, _cancellationTokenSource.Token);
+                string pageContent = await downloader.DownloadPagesAsync(_url, _cancellationTokenSource.Token);
+                this.PageHash = hashProvider.ComputeHash(pageContent ?? string.Empty);
                 this.OperationResult = OperationResult.Success;
             }
             catch (OperationCanceledException ex)
@@ -110,6 +125,14 @@ namespace Async.Example.ViewModel
             if (downloader != null)
             {
                 downloader.Dispose();
+            }
+        }
+
+        private void CleanUpHashProvider(HashProvider hashProvider)
+        {
+            if (hashProvider != null)
+            {
+                hashProvider.Dispose();
             }
         }
 

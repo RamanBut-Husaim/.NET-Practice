@@ -12,7 +12,7 @@ namespace Async.Example.ViewModel
         private readonly ObservableCollection<DownloaderItemModel> _downloaderItemModels;
 
         private readonly UrlValidator _urlValidator;
-        private readonly DownloaderFactory _downloaderFactory;
+        private readonly DownloadItemFactory _downloadItemFactory;
         private readonly DelegateCommand _addUrlCommand;
         private readonly DelegateCommand _clearListCommand;
 
@@ -27,7 +27,7 @@ namespace Async.Example.ViewModel
             _downloaderItemModels = new ObservableCollection<DownloaderItemModel>();
 
             _urlValidator = new UrlValidator();
-            _downloaderFactory = new DownloaderFactory();
+            _downloadItemFactory = new DownloadItemFactory();
             _addUrlCommand = new DelegateCommand(this.AddUrl);
             _clearListCommand = new DelegateCommand(this.CleanUpItems);
         }
@@ -72,7 +72,7 @@ namespace Async.Example.ViewModel
             this.ValidateUrl();
             if (this.IsUrlValid)
             {
-                _downloaderItemModels.Add(new DownloaderItemModel(this.Url, _downloaderFactory));
+                _downloaderItemModels.Add(_downloadItemFactory.Create(this.Url));
                 this.Url = string.Empty;
             }
         }

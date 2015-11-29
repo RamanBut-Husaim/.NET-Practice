@@ -5,12 +5,12 @@ namespace Async.Example.Model
 {
     public sealed class HashProvider : IDisposable
     {
-        private readonly SHA256 _hashCalculator;
+        private readonly SHA512 _hashCalculator;
         private bool _disposed;
 
         public HashProvider()
         {
-            _hashCalculator = new SHA256Managed();
+            _hashCalculator = new SHA512Managed();
         }
 
         public string ComputeHash(string value)

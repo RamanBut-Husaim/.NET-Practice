@@ -66,6 +66,7 @@
     <Compile Include="Model\UrlValidator.cs" />
     <Compile Include="ViewModel\AsyncCommand.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
+    <Compile Include="ViewModel\DownloaderItemModel.cs" />
     <Compile Include="ViewModel\DownloaderViewModel.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\OperationResult.cs" />
@@ -74,6 +75,9 @@
     </Compile>
     <Compile Include="View\DownloaderControl.xaml.cs">
       <DependentUpon>DownloaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DownloaderItem.xaml.cs">
+      <DependentUpon>DownloaderItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OperationResultTextBox.xaml.cs">
       <DependentUpon>OperationResultTextBox.xaml</DependentUpon>
@@ -115,6 +119,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DownloaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DownloaderItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

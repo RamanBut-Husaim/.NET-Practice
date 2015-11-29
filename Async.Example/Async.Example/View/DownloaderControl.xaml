@@ -3,22 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ViewModel="clr-namespace:Async.Example.ViewModel"
+             xmlns:viewModel="clr-namespace:Async.Example.ViewModel"
              xmlns:view="clr-namespace:Async.Example.View"
              mc:Ignorable="d"
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance ViewModel:DownloaderViewModel}" Height="520">
+             d:DataContext="{d:DesignInstance viewModel:DownloaderViewModel}" Height="650" Width="600">
 
-    <StackPanel Height="520">
+    <StackPanel Margin="0">
         <Label Foreground="Blue" Margin="5,5,5,0">URL to download</Label>
         <view:UrlInput></view:UrlInput>
         <Label Foreground="Blue" Margin="5,5,5,0">URL List</Label>
-        <ListBox ItemsSource="{Binding UrlList}" Height="200" Margin="5"/>
-        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="5"/>
-        <view:OperationResultTextBox></view:OperationResultTextBox>
+        <ListBox ItemsSource="{Binding DownloaderItems}" Height="400" Margin="5" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <view:DownloaderItem></view:DownloaderItem>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <Button IsEnabled="{Binding NotProcessing}" Command="{Binding AddUrlCommand}" Margin="5" Content="Add URL"/>
-        <Button Margin="5" Command="{Binding DownloadPagesCommand}" Content="Download"/>
-        <Button Margin="5" Content="Abort" Command="{Binding AbortCommand}" IsEnabled="{Binding Processing}"></Button>
         <Button Margin="5" Content="Clear List" Command="{Binding ClearUrlListCommand}"></Button>
     </StackPanel>
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Async.Example
 {
@@ -8,6 +7,5 @@ namespace Async.Example
     /// </summary>
     public partial class App : Application
     {
-        private readonly IDisposable _downloaderViewModel;
     }
 }

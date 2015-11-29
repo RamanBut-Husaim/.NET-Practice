@@ -10,7 +10,6 @@ namespace Async.Example.View
         public DownloaderControl()
         {
             this.InitializeComponent();
-            this.Dispatcher.ShutdownStarted += this.OnDispatcherShutDownStarted;
         }
 
         private void OnDispatcherShutDownStarted(object sender, EventArgs e)

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Windows.Input;
 using Async.Example.Model;
 
@@ -10,39 +9,32 @@ namespace Async.Example.ViewModel
 {
     public sealed class DownloaderViewModel : ObservableObject<DownloaderViewModel>, IDisposable
     {
-        private readonly ObservableCollection<string> _urlList;
+        private readonly ObservableCollection<DownloaderItemModel> _downloaderItemModels;
+
         private readonly UrlValidator _urlValidator;
         private readonly DownloaderFactory _downloaderFactory;
         private readonly DelegateCommand _addUrlCommand;
-        private readonly AsyncCommand _downloadCommand;
-        private readonly DelegateCommand _abortCommand;
         private readonly DelegateCommand _clearListCommand;
 
         private bool _isUrlValid;
         private string _url;
-        private OperationResult _operationResult;
-        private bool _processing;
-        private CancellationTokenSource _cancellationTokenSource;
         private bool _disposed;
-        private double _progressValue;
 
         public DownloaderViewModel()
         {
             _isUrlValid = true;
             _url = string.Empty;
-            _processing = false;
-            _urlList = new ObservableCollection<string>();
+            _downloaderItemModels = new ObservableCollection<DownloaderItemModel>();
+
             _urlValidator = new UrlValidator();
             _downloaderFactory = new DownloaderFactory();
-            _downloadCommand = new AsyncCommand(this.DownloadPages);
             _addUrlCommand = new DelegateCommand(this.AddUrl);
-            _abortCommand = new DelegateCommand(this.AbortDownload);
-            _clearListCommand = new DelegateCommand(_urlList.Clear);
+            _clearListCommand = new DelegateCommand(this.CleanUpItems);
         }
 
-        public IEnumerable<string> UrlList
+        public IEnumerable<DownloaderItemModel> DownloaderItems
         {
-            get { return _urlList; }
+            get {  return _downloaderItemModels; }
         }
 
         public bool IsUrlValid
@@ -52,16 +44,6 @@ namespace Async.Example.ViewModel
             {
                 _isUrlValid = value;
                 this.RaisePropertyChangedEvent(p => p.IsUrlValid);
-            }
-        }
-
-        public OperationResult OperationResult
-        {
-            get { return _operationResult; }
-            set
-            {
-                _operationResult = value;
-                this.RaisePropertyChangedEvent(p => p.OperationResult);
             }
         }
 
@@ -75,45 +57,9 @@ namespace Async.Example.ViewModel
             }
         }
 
-        public double Progress
-        {
-            get { return _progressValue; }
-            set
-            {
-                _progressValue = value;
-                this.RaisePropertyChangedEvent(p => p.Progress);
-            }
-        }
-
-        public bool NotProcessing
-        {
-            get { return !this.Processing; }
-        }
-
-        public bool Processing
-        {
-            get { return _processing;}
-            set
-            {
-                _processing = value;
-                this.RaisePropertyChangedEvent(p => p.Processing);
-                this.RaisePropertyChangedEvent(p => p.NotProcessing);
-            }
-        }
-
         public ICommand AddUrlCommand
         {
             get { return _addUrlCommand; }
-        }
-
-        public ICommand DownloadPagesCommand
-        {
-            get { return _downloadCommand; }
-        }
-
-        public ICommand AbortCommand
-        {
-            get { return _abortCommand; }
         }
 
         public ICommand ClearUrlListCommand
@@ -126,7 +72,7 @@ namespace Async.Example.ViewModel
             this.ValidateUrl();
             if (this.IsUrlValid)
             {
-                _urlList.Add(this.Url);
+                _downloaderItemModels.Add(new DownloaderItemModel(this.Url, _downloaderFactory));
                 this.Url = string.Empty;
             }
         }
@@ -142,58 +88,6 @@ namespace Async.Example.ViewModel
             this.IsUrlValid = _urlValidator.IsUrlValid(this.Url);
         }
 
-        private void AbortDownload()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-            }
-        }
-
-        private async Task DownloadPages()
-        {
-            this.Processing = true;
-            this.Progress = 0;
-            Downloader downloader = _downloaderFactory.Create(new ProgressNotifier((value) => this.Progress += value, _urlList.Count));
-            try
-            {
-                _cancellationTokenSource = new CancellationTokenSource();
-                await downloader.DownloadPagesAsync(_urlList, _cancellationTokenSource.Token);
-                this.OperationResult = OperationResult.Success;
-            }
-            catch (OperationCanceledException ex)
-            {
-                this.OperationResult = OperationResult.Aborted;
-            }
-            catch (Exception ex)
-            {
-                this.OperationResult = OperationResult.Failed;
-            }
-            finally
-            {
-                this.CleanUpDownloader(downloader);
-                this.CleanUpCancellationTokenSource();
-
-                this.Processing = false;
-            }
-        }
-
-        private void CleanUpDownloader(Downloader downloader)
-        {
-            if (downloader != null)
-            {
-                downloader.Dispose();
-            }
-        }
-
-        private void CleanUpCancellationTokenSource()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Dispose();
-            }
-        }
-
         public void Dispose()
         {
             this.Dispose(true);
@@ -205,10 +99,23 @@ namespace Async.Example.ViewModel
             {
                 if (disposing)
                 {
-                    this.CleanUpCancellationTokenSource();
+                    this.CleanUpItems();
                 }
 
                 _disposed = true;
+            }
+        }
+
+        private void CleanUpItems()
+        {
+            var items = _downloaderItemModels.ToList();
+            _downloaderItemModels.Clear();
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] != null)
+                {
+                    items[i].Dispose();
+                }
             }
         }
     }

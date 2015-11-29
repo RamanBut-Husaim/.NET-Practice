@@ -2,9 +2,9 @@
 {
     public sealed class DownloaderFactory
     {
-        public Downloader Create(IProgressNotifier progressNotifier)
+        public Downloader Create()
         {
-            return new Downloader(progressNotifier);
+            return new Downloader();
         }
     }
 }

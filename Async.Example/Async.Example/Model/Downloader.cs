@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,34 +7,29 @@ namespace Async.Example.Model
 {
     public sealed class Downloader : IDisposable
     {
-        private readonly WebClient _webClient;
-        private readonly IProgressNotifier _progressNotifier;
+        private readonly HttpClient _httpClient;
         private bool _disposed;
 
-        public Downloader(IProgressNotifier progressNotifier)
+        public Downloader()
         {
-            _webClient = new WebClient();
-            _progressNotifier = progressNotifier;
+            _httpClient = new HttpClient();
         }
 
-        public async Task DownloadPagesAsync(IList<string> pages, CancellationToken token)
+        public async Task<string> DownloadPagesAsync(string page, CancellationToken token)
         {
             this.GuardDisposed();
 
-            if (pages == null)
+            if (page == null)
             {
-                throw new ArgumentNullException("pages");
+                throw new ArgumentNullException("page");
             }
 
-            var resultContent = new List<string>(pages.Count);
+            await Task.Delay(TimeSpan.FromSeconds(5), token);
 
-            for (int i = 0; i < pages.Count; ++i)
-            {
-                token.ThrowIfCancellationRequested();
-                var content = await _webClient.DownloadStringTaskAsync(pages[i]);
-                resultContent.Add(content);
-                _progressNotifier.NotifyProgress(1);
-            }
+            HttpResponseMessage response = await _httpClient.GetAsync(page, token);
+            string content = await response.Content.ReadAsStringAsync();
+
+            return content;
         }
 
         private void GuardDisposed()
@@ -57,7 +51,7 @@ namespace Async.Example.Model
             {
                 if (disposing)
                 {
-                    _webClient.Dispose();
+                    _httpClient.Dispose();
                 }
 
                 _disposed = true;

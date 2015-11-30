@@ -113,34 +113,11 @@ namespace Async.Example.ViewModel
             }
             finally
             {
-                this.CleanUpDownloader(downloader);
-                this.CleanUpCancellationTokenSource();
+                downloader.Dispose();
+                _cancellationTokenSource.Dispose();
+                hashProvider.Dispose();
 
                 this.OperationInProgress = false;
-            }
-        }
-
-        private void CleanUpDownloader(Downloader downloader)
-        {
-            if (downloader != null)
-            {
-                downloader.Dispose();
-            }
-        }
-
-        private void CleanUpHashProvider(HashProvider hashProvider)
-        {
-            if (hashProvider != null)
-            {
-                hashProvider.Dispose();
-            }
-        }
-
-        private void CleanUpCancellationTokenSource()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Dispose();
             }
         }
 
@@ -155,7 +132,7 @@ namespace Async.Example.ViewModel
             {
                 if (disposing)
                 {
-                    this.CleanUpCancellationTokenSource();
+                    _cancellationTokenSource.Dispose();
                 }
 
                 _disposed = true;

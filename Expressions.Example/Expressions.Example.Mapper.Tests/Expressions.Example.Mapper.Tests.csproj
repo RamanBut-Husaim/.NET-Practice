@@ -56,6 +56,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bar.cs" />
+    <Compile Include="Foo.cs" />
+    <Compile Include="MapperGeneratorTests.cs" />
+    <Compile Include="MapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

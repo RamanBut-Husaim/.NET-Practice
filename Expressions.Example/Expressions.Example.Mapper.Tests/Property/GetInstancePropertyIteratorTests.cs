@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Expressions.Example.Mapper.Property;
 using Xunit;
 
-namespace Expressions.Example.Mapper.Tests
+namespace Expressions.Example.Mapper.Tests.Property
 {
     public sealed class GetPropertyTest
     {
@@ -61,6 +62,11 @@ namespace Expressions.Example.Mapper.Tests
         public string PropSetter
         {
             set { _propSetterValue = value; }
+        }
+
+        private int PropIntPrivate
+        {
+            get { return _propInt; }
         }
 
         public static string PropStatic

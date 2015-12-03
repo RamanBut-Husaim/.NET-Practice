@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Expressions.Example.Mapper.Property;
 using Xunit;
 
-namespace Expressions.Example.Mapper.Tests
+namespace Expressions.Example.Mapper.Tests.Property
 {
     public sealed class SetPropertyTest
     {

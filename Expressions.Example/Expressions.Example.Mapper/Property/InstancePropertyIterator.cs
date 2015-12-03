@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Expressions.Example.Mapper
+namespace Expressions.Example.Mapper.Property
 {
     public abstract class InstancePropertyIterator<T> : IEnumerable<PropertyInfo>
     {

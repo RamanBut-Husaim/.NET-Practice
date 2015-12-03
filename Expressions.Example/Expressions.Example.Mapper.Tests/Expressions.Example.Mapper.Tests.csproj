@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -59,12 +63,14 @@
     <Compile Include="Bar.cs" />
     <Compile Include="Field\WritableInstanceFieldIteratorTests.cs" />
     <Compile Include="Foo.cs" />
+    <Compile Include="Merging\PropertyMergeManagerTests.cs" />
     <Compile Include="Property\GetInstancePropertyIteratorTests.cs" />
     <Compile Include="MapperGeneratorTests.cs" />
     <Compile Include="MapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Field\ReadableWritableInstanceFieldIteratorTests.cs" />
     <Compile Include="Property\SetInstancePropertyIterator.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Expressions.Example.Mapper\Expressions.Example.Mapper.csproj">

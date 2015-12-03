@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Expressions.Example.Mapper.Field
 {
-    public abstract class InstanceFieldIterator<T> : IEnumerable<FieldInfo>
+    public abstract class InstanceFieldIterator<T> : IInstanceMemberIterator<FieldInfo, T>
     {
         private readonly Lazy<IList<FieldInfo>> _fields;
 

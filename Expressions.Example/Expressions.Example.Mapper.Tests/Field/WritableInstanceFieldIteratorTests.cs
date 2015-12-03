@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Expressions.Example.Mapper.Tests.Field
 {
-    public sealed class WritableFieldTest
+    internal sealed class WritableFieldTest
     {
         public readonly int FieldInt;
         public readonly double FieldDouble;
@@ -20,7 +20,7 @@ namespace Expressions.Example.Mapper.Tests.Field
         public static string FieldStaticString;
     }
 
-    public struct WritableFieldTestStruct
+    internal struct WritableFieldTestStruct
     {
         public readonly int FieldInt;
         public readonly double FieldDouble;

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Expressions.Example.Mapper.Tests.Property
 {
-    public sealed class SetPropertyTest
+    internal sealed class SetPropertyTest
     {
         private int _propInt;
         private double _propDouble;
@@ -73,7 +73,7 @@ namespace Expressions.Example.Mapper.Tests.Property
         public int PropAuto { get; set; }
     }
 
-    public struct SetPropertyTestStruct
+    internal struct SetPropertyTestStruct
     {
         private readonly string _propGetter;
 

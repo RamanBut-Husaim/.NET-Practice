@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Expressions.Example.Mapper.Property
 {
-    public abstract class InstancePropertyIterator<T> : IEnumerable<PropertyInfo>
+    public abstract class InstancePropertyIterator<T> : IInstanceMemberIterator<PropertyInfo, T>
     {
         private readonly Lazy<IList<PropertyInfo>> _properties;
 

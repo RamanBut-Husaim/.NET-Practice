@@ -7,20 +7,8 @@ using Xunit;
 
 namespace Expressions.Example.Mapper.Tests.Expressions
 {
-    public sealed class PropertyExpressionBuilderTests
+    public sealed class PropertyExpressionBuilderTests : PropertyExpressionBuilderTestsBase
     {
-        private static readonly string SourceParameterName = "source";
-        private static readonly string DestinationParameterName = "destination";
-
-        private readonly ParameterExpression _sourceParameterExpression;
-        private readonly ParameterExpression _destinationParameterExpression;
-
-        public PropertyExpressionBuilderTests()
-        {
-            _sourceParameterExpression = Expression.Parameter(typeof (PropertyExpressionTestClass), SourceParameterName);
-            _destinationParameterExpression = Expression.Parameter(typeof (PropertyExpressionTestClass), DestinationParameterName);
-        }
-
         [Theory]
         [InlineData("Odin")]
         [InlineData("Thor")]
@@ -28,13 +16,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsString_TheAssignmentExpressionIsCorrect(string propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, string>(p => p.PropString);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass {PropString = propertyValue};
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -49,13 +37,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsByte_TheAssignmentExpressionIsCorrect(byte propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, byte>(p => p.PropByte);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropByte = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -70,13 +58,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsInt16_TheAssignmentExpressionIsCorrect(short propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, short>(p => p.PropShort);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropShort = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -91,13 +79,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsInt32_TheAssignmentExpressionIsCorrect(int propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, int>(p => p.PropInt);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropInt = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -112,13 +100,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsInt64_TheAssignmentExpressionIsCorrect(long propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, long>(p => p.PropLong);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropLong = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -133,13 +121,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsSingle_TheAssignmentExpressionIsCorrect(float propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, float>(p => p.PropFloat);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropFloat = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -154,13 +142,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsDouble_TheAssignmentExpressionIsCorrect(double propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, double>(p => p.PropDouble);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropDouble = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -175,13 +163,13 @@ namespace Expressions.Example.Mapper.Tests.Expressions
         public void Create_WhenThePropertyTypeIsDecimal_TheAssignmentExpressionIsCorrect(decimal propertyValue)
         {
             string propertyName = Utils.GetPropertyName<PropertyExpressionTestClass, decimal>(p => p.PropDecimal);
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var mergeResult = new MemberMergeResult<PropertyInfo>(typeof(PropertyExpressionTestClass).GetProperty(propertyName));
             Expression assignmentExpression = propertyExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(mergeResult);
 
             BlockExpression blockExpression = Expression.Block(assignmentExpression);
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropDecimal = propertyValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);

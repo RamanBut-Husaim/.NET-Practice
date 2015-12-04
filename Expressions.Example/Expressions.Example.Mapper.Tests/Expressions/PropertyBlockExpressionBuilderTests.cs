@@ -7,20 +7,8 @@ using Xunit;
 
 namespace Expressions.Example.Mapper.Tests.Expressions
 {
-    public sealed class PropertyBlockExpressionBuilderTests
+    public sealed class PropertyBlockExpressionBuilderTests : PropertyExpressionBuilderTestsBase
     {
-        private static readonly string SourceParameterName = "source";
-        private static readonly string DestinationParameterName = "destination";
-
-        private readonly ParameterExpression _sourceParameterExpression;
-        private readonly ParameterExpression _destinationParameterExpression;
-
-        public PropertyBlockExpressionBuilderTests()
-        {
-            _sourceParameterExpression = Expression.Parameter(typeof(PropertyExpressionTestClass), SourceParameterName);
-            _destinationParameterExpression = Expression.Parameter(typeof(PropertyExpressionTestClass), DestinationParameterName);
-        }
-
         [Fact]
         public void Create_WhenThePropertiesAreSpecified_TheAssignmentIsCorrect()
         {
@@ -31,18 +19,18 @@ namespace Expressions.Example.Mapper.Tests.Expressions
             var intProperty = typeof(PropertyExpressionTestClass).GetProperty(Utils.GetPropertyName<PropertyExpressionTestClass, int>(p => p.PropInt));
             var mergeResultInt = new MemberMergeResult<PropertyInfo>(intProperty);
 
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var properties = new[] {mergeResultString, mergeResultInt};
 
             // act
-            var propertyBlockExpressionBuilder = new PropertyBlockExpressionBuilder(propertyExpressionBuilder);
+            var propertyBlockExpressionBuilder = new MemberBlockExpressionBuilder<PropertyInfo>(propertyExpressionBuilder);
             var blockExpression = propertyBlockExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(properties);
 
             // assert
             string propStringValue = "Odin";
             int propIntValue = int.MinValue;
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass {PropString = propStringValue, PropInt = propIntValue};
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);
@@ -64,16 +52,16 @@ namespace Expressions.Example.Mapper.Tests.Expressions
             var floatProperty = typeof(PropertyExpressionTestClass).GetProperty(Utils.GetPropertyName<PropertyExpressionTestClass, float>(p => p.PropFloat));
             var mergeResultFloat = new MemberMergeResult<PropertyInfo>(floatProperty);
 
-            var propertyExpressionBuilder = new PropertyExpressionBuilder(_sourceParameterExpression, _destinationParameterExpression);
+            var propertyExpressionBuilder = new PropertyExpressionBuilder(this.SourceParameterExpression, this.DestinationParameterExpression);
 
             var properties = new[] { mergeResultDouble, mergeResultFloat };
 
             // act
-            var propertyBlockExpressionBuilder = new PropertyBlockExpressionBuilder(propertyExpressionBuilder);
+            var propertyBlockExpressionBuilder = new MemberBlockExpressionBuilder<PropertyInfo>(propertyExpressionBuilder);
             var blockExpression = propertyBlockExpressionBuilder.Create<PropertyExpressionTestClass, PropertyExpressionTestClass>(properties);
 
             // assert
-            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, _sourceParameterExpression, _destinationParameterExpression).Compile();
+            var action = Expression.Lambda<Action<PropertyExpressionTestClass, PropertyExpressionTestClass>>(blockExpression, this.SourceParameterExpression, this.DestinationParameterExpression).Compile();
             PropertyExpressionTestClass sourceObject = new PropertyExpressionTestClass { PropDouble = doubleValue, PropFloat = singleValue };
             var destinationObject = new PropertyExpressionTestClass();
             action.Invoke(sourceObject, destinationObject);

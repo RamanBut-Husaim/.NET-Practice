@@ -61,6 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs" />
+    <Compile Include="Expressions\FieldBlockExpressionBuilderTests.cs" />
+    <Compile Include="Expressions\FieldExpressionBuilderTestsBase.cs" />
+    <Compile Include="Expressions\PropertyExpressionBuilderTestsBase.cs" />
+    <Compile Include="Expressions\FieldExpressionBuilderTests.cs" />
+    <Compile Include="Expressions\FieldExpressionTestClass.cs" />
     <Compile Include="Expressions\PropertyBlockExpressionBuilderTests.cs" />
     <Compile Include="Expressions\PropertyExpressionBuilderTests.cs" />
     <Compile Include="Expressions\PropertyExpressionTestClass.cs" />

@@ -61,7 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs" />
+    <Compile Include="Expressions\PropertyBlockExpressionBuilderTests.cs" />
     <Compile Include="Expressions\PropertyExpressionBuilderTests.cs" />
+    <Compile Include="Expressions\PropertyExpressionTestClass.cs" />
     <Compile Include="Field\WritableInstanceFieldIteratorTests.cs" />
     <Compile Include="Foo.cs" />
     <Compile Include="Merging\FieldMergeManagerTests.cs" />

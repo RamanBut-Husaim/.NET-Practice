@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Expressions.Example.Mapper.Merging;
 using Expressions.Example.Mapper.Property;
@@ -89,6 +90,34 @@ namespace Expressions.Example.Mapper.Tests.Merging
 
             // assert
             Assert.Equal(Enumerable.Empty<PropertyInfo>(), mergeResult);
+        }
+
+        [Fact]
+        public void Test()
+        {
+            ParameterExpression sourceParameter = Expression.Parameter(typeof (PropertySourceTest), "source");
+            ParameterExpression destinationParameter = Expression.Parameter(typeof(PropertyDestinationTest), "destination");
+
+            var sourceProperty = Expression.Property(sourceParameter, "PropString");
+            var destinationProperty = Expression.Property(destinationParameter, "PropString");
+
+            var assignExpression = Expression.Assign(destinationProperty, sourceProperty);
+
+            var assignStr = assignExpression.ToString();
+
+            var blockExpression = Expression.Block(assignExpression);
+
+            var blockStr = blockExpression.ToString();
+
+            var action = Expression.Lambda<Action<PropertySourceTest, PropertyDestinationTest>>(blockExpression, sourceParameter, destinationParameter).Compile();
+
+            var source = new PropertySourceTest();
+            source.PropString = "one";
+            var dest = new PropertyDestinationTest();
+            dest.PropString = "two";
+            action.Invoke(source, dest);
+
+
         }
 
         private IEnumerator<PropertyInfo> CreateSourceEnumerator()

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace Expressions.Example.Mapper.Merging
+namespace Expressions.Example.Mapper.Property
 {
     public sealed class PropertyEqualityComparerFactory : IEqualityComparerFactory<PropertyInfo>
     {

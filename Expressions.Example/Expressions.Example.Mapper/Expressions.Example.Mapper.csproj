@@ -40,17 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Field\FieldEqualityComparerFactory.cs" />
+    <Compile Include="Field\FieldIteratorFactory.cs" />
     <Compile Include="Field\InstanceFieldIterator.cs" />
     <Compile Include="Field\ReadableWritableInstanceFieldIterator.cs" />
+    <Compile Include="Field\StrictFieldEqualityComparer.cs" />
     <Compile Include="Field\WritableInstanceFieldIterator.cs" />
     <Compile Include="IEqualityComparerFactory.cs" />
     <Compile Include="IInstanceMemberIterator.cs" />
     <Compile Include="IIteratorFactory.cs" />
     <Compile Include="Merging\MemberMergeManagerFactory.cs" />
-    <Compile Include="Merging\PropertyEqualityComparerFactory.cs" />
+    <Compile Include="Property\PropertyEqualityComparerFactory.cs" />
     <Compile Include="Merging\MemberMergeManager.cs" />
     <Compile Include="Merging\MemberMergeResult.cs" />
-    <Compile Include="Merging\StrictPropertyEqualityComparer.cs" />
+    <Compile Include="Property\StrictPropertyEqualityComparer.cs" />
     <Compile Include="Property\GetInstancePropertyIterator.cs" />
     <Compile Include="IMapper.cs" />
     <Compile Include="IMapperGenerator.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Expressions.Example.Mapper.Merging;
+using Expressions.Example.Mapper.Property;
 using Moq;
 using Xunit;
 

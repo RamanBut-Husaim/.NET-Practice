@@ -17,5 +17,17 @@ namespace Expressions.Example.Mapper.Tests
 
             throw new ArgumentException("The selector should contain a property.");
         }
+
+        public static string GetFieldName<TSource, TField>(Expression<Func<TSource, TField>> propertySelector)
+        {
+            MemberExpression member = propertySelector.Body as MemberExpression;
+
+            if (member != null)
+            {
+                return (member.Member as FieldInfo).Name;
+            }
+
+            throw new ArgumentException("The selector should contain a field.");
+        }
     }
 }

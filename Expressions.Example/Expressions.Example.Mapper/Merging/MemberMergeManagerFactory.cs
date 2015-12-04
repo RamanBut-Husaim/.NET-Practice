@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Expressions.Example.Mapper.Field;
 using Expressions.Example.Mapper.Property;
 
 namespace Expressions.Example.Mapper.Merging
@@ -11,6 +12,14 @@ namespace Expressions.Example.Mapper.Merging
             var equalityComparerFactory = new PropertyEqualityComparerFactory();
 
             return new MemberMergeManager<PropertyInfo>(iteratorFactory, equalityComparerFactory);
+        }
+
+        public MemberMergeManager<FieldInfo> CreateFieldMergeManager()
+        {
+            var iteratorFactory = new FieldIteratorFactory();
+            var equalityComparerFactory = new FieldEqualityComparerFactory();
+
+            return new MemberMergeManager<FieldInfo>(iteratorFactory, equalityComparerFactory);
         }
     }
 }

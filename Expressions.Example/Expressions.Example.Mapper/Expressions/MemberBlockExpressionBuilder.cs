@@ -17,11 +17,15 @@ namespace Expressions.Example.Mapper.Expressions
 
         public Expression Create<TSource, TDestination>(IEnumerable<MemberMergeResult<TMemberInfo>> properties)
         {
-            Expression[] propertyExpressions = properties.Select(p => _expressionBuilder.Create<TSource, TDestination>(p)).ToArray();
+            Expression[] expressions = properties.Select(p => _expressionBuilder.Create<TSource, TDestination>(p)).ToArray();
 
-            BlockExpression blockExpression = Expression.Block(propertyExpressions);
+            if (expressions.Length > 0)
+            {
+                BlockExpression blockExpression = Expression.Block(expressions);
+                return blockExpression;
+            }
 
-            return blockExpression;
+            return null;
         }
     }
 }

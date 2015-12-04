@@ -44,6 +44,7 @@
     <Compile Include="Expressions\IMemberBlockExpressionBuilder.cs" />
     <Compile Include="Expressions\IMemberExpressionBuilder.cs" />
     <Compile Include="Expressions\MemberBlockExpressionBuilder.cs" />
+    <Compile Include="Expressions\MemberBlockExpressionBuilderFactory.cs" />
     <Compile Include="Expressions\PropertyExpressionBuilder.cs" />
     <Compile Include="Field\FieldEqualityComparerFactory.cs" />
     <Compile Include="Field\FieldIteratorFactory.cs" />

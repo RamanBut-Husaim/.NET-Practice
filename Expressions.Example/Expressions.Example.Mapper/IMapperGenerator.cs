@@ -2,6 +2,6 @@
 {
     public interface IMapperGenerator
     {
-        IMapper<TSource, TDestination> Generate<TSource, TDestination>() where TDestination : new();
+        IMapper<TSource, TDestination> Generate<TSource, TDestination>() where TDestination : class, new();
     }
 }

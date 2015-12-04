@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using Expressions.Example.Mapper.Expressions;
+using Expressions.Example.Mapper.Merging;
+using Xunit;
 
 namespace Expressions.Example.Mapper.Tests
 {
@@ -7,7 +9,7 @@ namespace Expressions.Example.Mapper.Tests
         [Fact]
         public void Generate_WhenClassesAreSpecified_TheMapperIsCreated()
         {
-            var mapperGenerator = new MapperGenerator();
+            var mapperGenerator = new MapperGenerator(new MemberMergeManagerFactory(), new MemberBlockExpressionBuilderFactory());
 
             IMapper<Foo, Bar> mapper = mapperGenerator.Generate<Foo, Bar>();
 

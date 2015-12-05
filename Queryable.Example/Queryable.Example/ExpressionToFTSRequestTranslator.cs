@@ -34,16 +34,11 @@ namespace Queryable.Example
             switch (node.NodeType)
             {
                 case ExpressionType.Equal:
-                    if (node.Left.NodeType != ExpressionType.MemberAccess)
-                        throw new NotSupportedException(string.Format("Left operand should be property or field",
-                            node.NodeType));
+                    this.GuardParameterPosition(node);
 
-                    if (node.Right.NodeType != ExpressionType.Constant)
-                        throw new NotSupportedException(string.Format("Right operand should be constant", node.NodeType));
-
-                    Visit(node.Left);
+                    this.VisitLeftBinary(node);
                     resultString.Append("(");
-                    Visit(node.Right);
+                    this.VisitRightBinary(node);
                     resultString.Append(")");
                     break;
 
@@ -53,6 +48,46 @@ namespace Queryable.Example
             ;
 
             return node;
+        }
+
+        private void GuardParameterPosition(BinaryExpression node)
+        {
+            if (node.Left.NodeType == ExpressionType.MemberAccess && node.Right.NodeType == ExpressionType.Constant)
+            {
+                return;
+            }
+
+            if (node.Left.NodeType == ExpressionType.Constant && node.Right.NodeType == ExpressionType.MemberAccess)
+            {
+                return;
+            }
+
+            throw new NotSupportedException(
+                "Available combinations for parameters: 1) left - member; right - constant 2) left - constant; right - member");
+        }
+
+        private void VisitLeftBinary(BinaryExpression node)
+        {
+            if (node.Left.NodeType == ExpressionType.MemberAccess)
+            {
+                this.Visit(node.Left);
+            }
+            else
+            {
+                this.Visit(node.Right);
+            }
+        }
+
+        private void VisitRightBinary(BinaryExpression node)
+        {
+            if (node.Right.NodeType == ExpressionType.Constant)
+            {
+                this.Visit(node.Right);
+            }
+            else
+            {
+                this.Visit(node.Left);
+            }
         }
 
         protected override Expression VisitMember(MemberExpression node)

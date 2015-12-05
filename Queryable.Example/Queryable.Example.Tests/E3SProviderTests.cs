@@ -50,5 +50,16 @@ namespace Queryable.Example.Tests
                 _outputHelper.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
             }
         }
+
+        [Fact]
+        public void Where_WhenOperandPrecedenceIsInversed_CompletedSuccessfully()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => "EPBYMINW3594" == e.workstation))
+            {
+                _outputHelper.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
+            }
+        }
     }
 }

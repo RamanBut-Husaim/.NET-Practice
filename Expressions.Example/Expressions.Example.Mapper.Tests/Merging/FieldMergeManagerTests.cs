@@ -20,6 +20,10 @@ namespace Expressions.Example.Mapper.Tests.Merging
 
         public int FieldInt2;
 
+        public List<string> FieldListString;
+
+        public List<float> FieldListFloat;  
+
         private long _fieldLong;
     }
 
@@ -32,6 +36,10 @@ namespace Expressions.Example.Mapper.Tests.Merging
         public long FieldInt1;
 
         public int FieldInt2;
+
+        public List<string> FieldListString;
+
+        public List<double> FieldListDouble;  
 
         public decimal FieldDecimal;
     }
@@ -66,7 +74,8 @@ namespace Expressions.Example.Mapper.Tests.Merging
             var expectedResult = new List<FieldInfo>
             {
                 type.GetField(Utils.GetFieldName<FieldDestinationTest, string>(p => p.FieldString)),
-                type.GetField(Utils.GetFieldName<FieldDestinationTest, int>(p => p.FieldInt2))
+                type.GetField(Utils.GetFieldName<FieldDestinationTest, int>(p => p.FieldInt2)),
+                type.GetField(Utils.GetFieldName<FieldDestinationTest, List<string>>(p => p.FieldListString))
             };
 
             Assert.Equal(expectedResult.OrderBy(p => p.Name), mergeResult.OrderBy(p => p.Name), _equalityComparerFactory.Create());
@@ -75,7 +84,7 @@ namespace Expressions.Example.Mapper.Tests.Merging
         [Fact]
         public void Merge_WhenClassesHaveNoCommonFields_TheResultIsMepy()
         {
-            // assign
+            // arrange
             var sourceFieldIterator = new Mock<IInstanceMemberIterator<FieldInfo, FieldSourceTest>>();
             sourceFieldIterator.Setup(p => p.GetEnumerator()).Returns(this.CreateSpecificSourceEnumerator);
             var destinationFieldIterator = new Mock<IInstanceMemberIterator<FieldInfo, FieldDestinationTest>>();
@@ -85,9 +94,11 @@ namespace Expressions.Example.Mapper.Tests.Merging
             iteratorFactory.Setup(p => p.CreateSourceIterator<FieldSourceTest>()).Returns(sourceFieldIterator.Object);
             iteratorFactory.Setup(p => p.CreateDestinationIterator<FieldDestinationTest>()).Returns(destinationFieldIterator.Object);
 
+            // act
             var mergeManager = new MemberMergeManager<FieldInfo>(iteratorFactory.Object, _equalityComparerFactory);
             var mergeResult = mergeManager.Merge<FieldSourceTest, FieldDestinationTest>().Select(p => p.MemberInfo).ToList();
-
+            
+            // assert
             Assert.Equal(Enumerable.Empty<FieldInfo>(), mergeResult);
         }
 
@@ -100,8 +111,9 @@ namespace Expressions.Example.Mapper.Tests.Merging
                 type.GetField(Utils.GetFieldName<FieldSourceTest, double>(p => p.FieldDouble)),
                 type.GetField(Utils.GetFieldName<FieldSourceTest, string>(p => p.FieldString)),
                 type.GetField(Utils.GetFieldName<FieldSourceTest, int>(p => p.FieldInt1)),
-                type.GetField(Utils.GetFieldName<FieldSourceTest, int>(p => p.FieldInt2))
-
+                type.GetField(Utils.GetFieldName<FieldSourceTest, int>(p => p.FieldInt2)),
+                type.GetField(Utils.GetFieldName<FieldSourceTest, List<string>>(p => p.FieldListString)),
+                type.GetField(Utils.GetFieldName<FieldSourceTest, List<float>>(p => p.FieldListFloat))
             }.GetEnumerator();
         }
 
@@ -114,8 +126,9 @@ namespace Expressions.Example.Mapper.Tests.Merging
                 type.GetField(Utils.GetFieldName<FieldDestinationTest, string>(p => p.FieldString)),
                 type.GetField(Utils.GetFieldName<FieldDestinationTest, long>(p => p.FieldInt1)),
                 type.GetField(Utils.GetFieldName<FieldDestinationTest, int>(p => p.FieldInt2)),
-                type.GetField(Utils.GetFieldName<FieldDestinationTest, decimal>(p => p.FieldDecimal))
-
+                type.GetField(Utils.GetFieldName<FieldDestinationTest, decimal>(p => p.FieldDecimal)),
+                type.GetField(Utils.GetFieldName<FieldDestinationTest, List<string>>(p => p.FieldListString)),
+                type.GetField(Utils.GetFieldName<FieldDestinationTest, List<double>>(p => p.FieldListDouble))
             }.GetEnumerator();
         }
 

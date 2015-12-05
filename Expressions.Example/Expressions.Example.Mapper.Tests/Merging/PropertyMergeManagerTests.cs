@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using Expressions.Example.Mapper.Merging;
 using Expressions.Example.Mapper.Property;
@@ -19,6 +18,10 @@ namespace Expressions.Example.Mapper.Tests.Merging
         public int PropInt1 { get; set; }
 
         public double PropDouble { get; set; }
+
+        public List<int> PropListInt { get; set; }
+
+        public List<short> PropListShort { get; set; } 
     }
 
     internal sealed class PropertyDestinationTest
@@ -32,6 +35,10 @@ namespace Expressions.Example.Mapper.Tests.Merging
         public float PropFloat { get; set; }
 
         public short PropDouble { get; set; }
+
+        public List<int> PropListInt { get; set; } 
+
+        public List<long> PropListShort { get; set; }
     }
 
     public sealed class PropertyMergeManagerTests
@@ -65,7 +72,8 @@ namespace Expressions.Example.Mapper.Tests.Merging
             var expectedResult = new List<PropertyInfo>
             {
                 type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, string>(p => p.PropString)),
-                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, int>(p => p.PropInt1))
+                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, int>(p => p.PropInt1)),
+                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, List<int>>(p => p.PropListInt))
             };
 
             Assert.Equal(expectedResult.OrderBy(p => p.Name), mergeResult.OrderBy(p => p.Name), _equalityComparerFactory.Create());
@@ -92,34 +100,6 @@ namespace Expressions.Example.Mapper.Tests.Merging
             Assert.Equal(Enumerable.Empty<PropertyInfo>(), mergeResult);
         }
 
-        [Fact]
-        public void Test()
-        {
-            ParameterExpression sourceParameter = Expression.Parameter(typeof (PropertySourceTest), "source");
-            ParameterExpression destinationParameter = Expression.Parameter(typeof(PropertyDestinationTest), "destination");
-
-            var sourceProperty = Expression.Property(sourceParameter, "PropString");
-            var destinationProperty = Expression.Property(destinationParameter, "PropString");
-
-            var assignExpression = Expression.Assign(destinationProperty, sourceProperty);
-
-            var assignStr = assignExpression.ToString();
-
-            var blockExpression = Expression.Block(assignExpression);
-
-            var blockStr = blockExpression.ToString();
-
-            var action = Expression.Lambda<Action<PropertySourceTest, PropertyDestinationTest>>(blockExpression, sourceParameter, destinationParameter).Compile();
-
-            var source = new PropertySourceTest();
-            source.PropString = "one";
-            var dest = new PropertyDestinationTest();
-            dest.PropString = "two";
-            action.Invoke(source, dest);
-
-
-        }
-
         private IEnumerator<PropertyInfo> CreateSourceEnumerator()
         {
             Type type = typeof (PropertySourceTest);
@@ -128,7 +108,9 @@ namespace Expressions.Example.Mapper.Tests.Merging
                 type.GetProperty(Utils.GetPropertyName<PropertySourceTest, string>(p => p.PropString)),
                 type.GetProperty(Utils.GetPropertyName<PropertySourceTest, int>(p => p.PropInt)),
                 type.GetProperty(Utils.GetPropertyName<PropertySourceTest, int>(p => p.PropInt1)),
-                type.GetProperty(Utils.GetPropertyName<PropertySourceTest, double>(p => p.PropDouble))
+                type.GetProperty(Utils.GetPropertyName<PropertySourceTest, double>(p => p.PropDouble)),
+                type.GetProperty(Utils.GetPropertyName<PropertySourceTest, List<int>>(p => p.PropListInt)),
+                type.GetProperty(Utils.GetPropertyName<PropertySourceTest, List<short>>(p => p.PropListShort))
             }.GetEnumerator();
         }
 
@@ -142,7 +124,9 @@ namespace Expressions.Example.Mapper.Tests.Merging
                 type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, int>(p => p.PropInt1)),
                 type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, int>(p => p.PropInt2)),
                 type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, float>(p => p.PropFloat)),
-                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, short>(p => p.PropDouble))
+                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, short>(p => p.PropDouble)),
+                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, List<int>>(p => p.PropListInt)),
+                type.GetProperty(Utils.GetPropertyName<PropertyDestinationTest, List<long>>(p => p.PropListShort))
             }.GetEnumerator();
         }
 

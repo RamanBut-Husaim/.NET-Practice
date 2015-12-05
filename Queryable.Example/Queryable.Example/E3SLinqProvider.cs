@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Queryable.Example.E3SClient;
+using Queryable.Example.RequestTranslators;
 
 namespace Queryable.Example
 {

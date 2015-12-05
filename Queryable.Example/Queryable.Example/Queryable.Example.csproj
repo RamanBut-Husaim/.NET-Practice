@@ -64,8 +64,9 @@
     <Compile Include="E3SEntitySet.cs" />
     <Compile Include="E3SLinqProvider.cs" />
     <Compile Include="E3SQuery.cs" />
-    <Compile Include="ExpressionToFTSRequestTranslator.cs" />
+    <Compile Include="RequestTranslators\ExpressionToFTSRequestTranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestTranslators\OperationMode.cs" />
     <Compile Include="TypeHelper.cs" />
   </ItemGroup>
   <ItemGroup>

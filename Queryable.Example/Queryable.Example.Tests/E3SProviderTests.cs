@@ -61,5 +61,38 @@ namespace Queryable.Example.Tests
                 _outputHelper.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
             }
         }
+
+        [Fact]
+        public void Where_WhenStartWithOperationIsUsed_QueryIsExecutedSuccessfully()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPBYMINW359")))
+            {
+                _outputHelper.WriteLine("{0} {1} {2}", emp.nativename, emp.startworkdate, emp.workstation);
+            }
+        }
+
+        [Fact]
+        public void Where_WhenEndsWithOperationIsUsed_QueryIsExecutedSuccessfully()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.EndsWith("94")))
+            {
+                _outputHelper.WriteLine("{0} {1} {2}", emp.nativename, emp.startworkdate, emp.workstation);
+            }
+        }
+
+        [Fact]
+        public void Where_WhenContainsOperationIsUsed_QueryIsExecutedSuccessfully()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.EndsWith("594")))
+            {
+                _outputHelper.WriteLine("{0} {1} {2}", emp.nativename, emp.startworkdate, emp.workstation);
+            }
+        }
     }
 }

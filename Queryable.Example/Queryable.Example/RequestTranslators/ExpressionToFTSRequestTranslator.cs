@@ -1,34 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System.ServiceModel.Channels;
 using System.Text;
 
 namespace Queryable.Example.RequestTranslators
 {
     public sealed class ExpressionToFTSRequestTranslator : ExpressionVisitor
     {
-        private readonly StringBuilder _resultString;
+        private readonly Stack<StringBuilder> _operationBuffers;
+        private readonly List<StringBuilder> _completeOperations; 
+
         private OperationMode _operationMode;
 
         public ExpressionToFTSRequestTranslator()
         {
-            _resultString = new StringBuilder();
+            _operationBuffers = new Stack<StringBuilder>();
+            _completeOperations = new List<StringBuilder>();
             _operationMode = OperationMode.Default;
         }
 
-        public string Translate(Expression exp)
+        public IEnumerable<string> Translate(Expression exp)
         {
-            this.Reset();
-
             Visit(exp);
 
-            return _resultString.ToString();
+            _completeOperations.AddRange(_operationBuffers.Reverse());
+
+            return _completeOperations.Select(p => p.ToString()).Where(p => !string.IsNullOrEmpty(p));
         }
 
-        private void Reset()
+        private StringBuilder CurrentOperation
         {
-            _resultString.Clear();
-            _operationMode = OperationMode.Default;
+            get
+            {
+                if (_operationBuffers.Count == 0)
+                {
+                    _operationBuffers.Push(new StringBuilder());
+                }
+
+                return _operationBuffers.Peek();
+            }
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -66,10 +77,13 @@ namespace Queryable.Example.RequestTranslators
         {
             OperationMode oldState = _operationMode;
             _operationMode = operationMode;
-            var resultNode = base.VisitMethodCall(node);
+            this.Visit(node.Object);
+            this.CurrentOperation.Append("(");
+            this.Visit(node.Arguments[0]);
+            this.CurrentOperation.Append(")");
             _operationMode = oldState;
 
-            return resultNode;
+            return node;
         }
 
         protected override Expression VisitBinary(BinaryExpression node)
@@ -78,19 +92,35 @@ namespace Queryable.Example.RequestTranslators
             {
                 case ExpressionType.Equal:
                     this.GuardParameterPosition(node);
-
-                    this.VisitLeftBinary(node);
-                    _resultString.Append("(");
-                    this.VisitRightBinary(node);
-                    _resultString.Append(")");
-                    break;
-
+                    this.VisitLeftEqualBinaryNode(node);
+                    this.CurrentOperation.Append("(");
+                    this.VisitRightEqualBinaryNode(node);
+                    this.CurrentOperation.Append(")");
+                    return node;
+                case ExpressionType.AndAlso:
+                {
+                    this.AddOperation();
+                    this.Visit(node.Left);
+                    this.CompleteOperation();
+                    this.AddOperation();
+                    this.Visit(node.Right);
+                    this.CompleteOperation();
+                    return node;
+                }
                 default:
                     throw new NotSupportedException(string.Format("Operation {0} is not supported", node.NodeType));
             }
-            ;
+        }
 
-            return node;
+        private void AddOperation()
+        {
+            _operationBuffers.Push(new StringBuilder());
+        }
+
+        private void CompleteOperation()
+        {
+            var operation = _operationBuffers.Pop();
+            _completeOperations.Add(operation);
         }
 
         private void GuardParameterPosition(BinaryExpression node)
@@ -109,7 +139,7 @@ namespace Queryable.Example.RequestTranslators
                 "Available combinations for parameters: 1) left - member; right - constant 2) left - constant; right - member");
         }
 
-        private void VisitLeftBinary(BinaryExpression node)
+        private void VisitLeftEqualBinaryNode(BinaryExpression node)
         {
             if (node.Left.NodeType == ExpressionType.MemberAccess)
             {
@@ -121,7 +151,7 @@ namespace Queryable.Example.RequestTranslators
             }
         }
 
-        private void VisitRightBinary(BinaryExpression node)
+        private void VisitRightEqualBinaryNode(BinaryExpression node)
         {
             if (node.Right.NodeType == ExpressionType.Constant)
             {
@@ -135,7 +165,7 @@ namespace Queryable.Example.RequestTranslators
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            _resultString.Append(node.Member.Name).Append(":");
+            this.CurrentOperation.Append(node.Member.Name).Append(":");
 
             return base.VisitMember(node);
         }
@@ -146,26 +176,26 @@ namespace Queryable.Example.RequestTranslators
             {
                 case OperationMode.StartsWith:
                 {
-                    _resultString.Append(node.Value);
-                    _resultString.Append('*');
+                    this.CurrentOperation.Append(node.Value);
+                    this.CurrentOperation.Append('*');
                     break;
                 }
                 case OperationMode.EndsWith:
                 {
-                    _resultString.Append('*');
-                    _resultString.Append(node.Value);
+                    this.CurrentOperation.Append('*');
+                    this.CurrentOperation.Append(node.Value);
                     break;
                 }
                 case OperationMode.Contains:
                 {
-                    _resultString.Append('*');
-                    _resultString.Append(node.Value);
-                    _resultString.Append('*');
+                    this.CurrentOperation.Append('*');
+                    this.CurrentOperation.Append(node.Value);
+                    this.CurrentOperation.Append('*');
                     break;
                 }
                 default:
                 {
-                    _resultString.Append(node.Value);
+                    this.CurrentOperation.Append(node.Value);
                     break;
                 }
             }

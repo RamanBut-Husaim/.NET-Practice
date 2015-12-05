@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Queryable.Example.E3SClient
@@ -27,17 +28,16 @@ namespace Queryable.Example.E3SClient
 
         public Uri GenerateRequestUrl(Type type, string query = "*", int start = 0, int limit = 10)
         {
+            return this.GenerateRequestUrl(type, new[] {query}, start, limit);
+        }
+
+        public Uri GenerateRequestUrl(Type type, IEnumerable<string> queries, int start = 0, int limit = 10)
+        {
             string metaTypeName = GetMetaTypeName(type);
 
             var ftsQueryRequest = new FTSQueryRequest
             {
-                Statements = new List<Statement>
-                {
-                    new Statement
-                    {
-                        Query = query
-                    }
-                },
+                Statements = queries.Select(p=> new Statement { Query = p }).ToList(),
                 Start = start,
                 Limit = limit
             };

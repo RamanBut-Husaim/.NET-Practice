@@ -94,5 +94,32 @@ namespace Queryable.Example.Tests
                 _outputHelper.WriteLine("{0} {1} {2}", emp.nativename, emp.startworkdate, emp.workstation);
             }
         }
+
+        [Fact]
+        public void Where_WhenAndOperatorIsUsed_QueryIsExecutedSuccessfully()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(
+                e => e.workstation.Contains("EPBY") &&
+                     e.workstation.EndsWith("594") &&
+                     e.workstation.Contains("MINW")))
+            {
+                _outputHelper.WriteLine("{0} {1} {2}", emp.nativename, emp.startworkdate, emp.workstation);
+            }
+        }
+
+        [Fact]
+        public void Where_WhenEqualsAndAndOperatorAreUsed_QueryIsExecutedSuccessfully()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(
+                e => e.workstation.Contains("EPBY") &&
+                     e.workstation == "EPBYMINW3594"))
+            {
+                _outputHelper.WriteLine("{0} {1} {2}", emp.nativename, emp.startworkdate, emp.workstation);
+            }
+        }
     }
 }

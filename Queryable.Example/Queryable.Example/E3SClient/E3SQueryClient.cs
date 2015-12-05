@@ -34,26 +34,30 @@ namespace Queryable.Example.E3SClient
             return JsonConvert.DeserializeObject<FTSResponse<T>>(resultString).items.Select(t => t.data);
         }
 
-
-        public IEnumerable SearchFTS(Type type, string query, int start = 0, int limit = 0)
+        public IEnumerable SearchFTS(Type type, IEnumerable<string> queries, int start = 0, int limit = 0)
         {
             HttpClient client = CreateClient();
             var requestGenerator = new FTSRequestGenerator(BaseAddress);
 
-            Uri request = requestGenerator.GenerateRequestUrl(type, query, start, limit);
+            Uri request = requestGenerator.GenerateRequestUrl(type, queries, start, limit);
 
             var resultString = client.GetStringAsync(request).Result;
-            var endType = typeof (FTSResponse<>).MakeGenericType(type);
+            var endType = typeof(FTSResponse<>).MakeGenericType(type);
             var result = JsonConvert.DeserializeObject(resultString, endType);
 
-            var list = Activator.CreateInstance(typeof (List<>).MakeGenericType(type)) as IList;
+            var list = Activator.CreateInstance(typeof(List<>).MakeGenericType(type)) as IList;
 
-            foreach (object item in (IEnumerable) endType.GetProperty("items").GetValue(result))
+            foreach (object item in (IEnumerable)endType.GetProperty("items").GetValue(result))
             {
                 list.Add(item.GetType().GetProperty("data").GetValue(item));
             }
 
             return list;
+        }
+
+        public IEnumerable SearchFTS(Type type, string query, int start = 0, int limit = 0)
+        {
+            return this.SearchFTS(type, new[] {query}, start, limit);
         }
 
 

@@ -1,13 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppDomains.Example.Plugin.Core", "AppDomains.Example.Plugin.Core\AppDomains.Example.Plugin.Core.csproj", "{CDEC16FA-2393-4467-86A1-BBF698744EDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppDomains.Example.Plugin.Contracts", "AppDomains.Example.Plugin.Contracts\AppDomains.Example.Plugin.Contracts.csproj", "{0F6DC91C-B1F0-4FD0-8AD8-4EE8655274E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppDomains.Example.Plugin", "AppDomains.Example.Plugin\AppDomains.Example.Plugin.csproj", "{299F288F-7094-46CE-B536-298E7FEF1CA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AF2AC0A4-1A39-4631-8135-6E427A1CFF4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9FA94B33-3E23-4A09-9526-017341793C45}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.txt = Readme.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

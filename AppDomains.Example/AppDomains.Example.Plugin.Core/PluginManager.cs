@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Policy;
 using AppDomains.Example.Plugin.Contracts;
 
@@ -9,21 +10,46 @@ namespace AppDomains.Example.Plugin.Core
     public sealed class PluginManager : IPluginManager
     {
         private readonly string _basePath;
+        private readonly TimeSpan _initialLifeTime;
+        private readonly TimeSpan _renewalOnCallTime;
         private readonly IDictionary<Type, IList<PluginTokenBase>> _plugins;
+        private readonly IPluginLifetimeManagerFactory _pluginLifetimeManagerFactory;
 
-        public PluginManager()
+        public PluginManager() : this(AppDomain.CurrentDomain.BaseDirectory)
         {
-            _basePath = AppDomain.CurrentDomain.BaseDirectory;
-            _plugins = new Dictionary<Type, IList<PluginTokenBase>>();
         }
 
-        public PluginManager(string basePath)
+        public PluginManager(IPluginLifetimeManagerFactory pluginLifetimeManagerFactory) : this(AppDomain.CurrentDomain.BaseDirectory, pluginLifetimeManagerFactory)
         {
+
+        }
+
+        public PluginManager(string basePath) : this(basePath, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(2), null)
+        {
+        }
+
+        public PluginManager(string basePath, IPluginLifetimeManagerFactory pluginLifetimeManagerFactory) : this(basePath, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(2), pluginLifetimeManagerFactory)
+        {
+        }
+
+        public PluginManager(TimeSpan initialLifeTime, TimeSpan renewalOnCallTime) : this(AppDomain.CurrentDomain.BaseDirectory, initialLifeTime, renewalOnCallTime, null)
+        {
+        }
+
+        public PluginManager(TimeSpan initialLifeTime, TimeSpan renewalOnCallTime, IPluginLifetimeManagerFactory lifetimeManagerFactory) : this(AppDomain.CurrentDomain.BaseDirectory, initialLifeTime, renewalOnCallTime, lifetimeManagerFactory)
+        {
+        }
+
+        public PluginManager(string basePath, TimeSpan initialLifeTime, TimeSpan renewalOnCallTime, IPluginLifetimeManagerFactory pluginLifetimeManagerFactory)
+        {
+            _pluginLifetimeManagerFactory = pluginLifetimeManagerFactory ?? new PluginLifetimeManagerFactory();
             _basePath = basePath;
+            _initialLifeTime = initialLifeTime;
+            _renewalOnCallTime = renewalOnCallTime;
             _plugins = new Dictionary<Type, IList<PluginTokenBase>>();
         }
 
-        public TPlugin Load<TPlugin>() where TPlugin : PluginBase, new()
+        public TPlugin Load<TPlugin>() where TPlugin : PluginBase
         {
             TPlugin plugin = this.GetPluginIfExists<TPlugin>();
             if (plugin != null)
@@ -36,10 +62,16 @@ namespace AppDomains.Example.Plugin.Core
             return pluginInstance;
         }
 
-        public void Unload<TPlugin>() where TPlugin : PluginBase, new()
+        public bool IsLoaded<TPlugin>() where TPlugin : PluginBase
         {
             TPlugin plugin = this.GetPluginIfExists<TPlugin>();
-            if (plugin == null)
+
+            return plugin != null;
+        }
+
+        public void Unload<TPlugin>() where TPlugin : PluginBase
+        {
+            if (!this.IsLoaded<TPlugin>())
             {
                 throw new InvalidOperationException("The plugin has already been unloaded.");
             }
@@ -47,7 +79,7 @@ namespace AppDomains.Example.Plugin.Core
             this.UnloadPlugins<TPlugin>();
         }
 
-        private void UnloadPlugins<TPlugin>() where TPlugin : PluginBase, new()
+        private void UnloadPlugins<TPlugin>() where TPlugin : PluginBase
         {
             var pluginType = typeof(TPlugin);
 
@@ -76,7 +108,7 @@ namespace AppDomains.Example.Plugin.Core
             }
         }
 
-        private void UnloadInternal<TPlugin>(PluginToken<TPlugin> plugin) where TPlugin : PluginBase, new()
+        private void UnloadInternal<TPlugin>(PluginToken<TPlugin> plugin) where TPlugin : PluginBase
         {
             if (plugin != null)
             {
@@ -84,7 +116,7 @@ namespace AppDomains.Example.Plugin.Core
             }
         }
 
-        private TPlugin GetPluginIfExists<TPlugin>() where TPlugin : PluginBase, new()
+        private TPlugin GetPluginIfExists<TPlugin>() where TPlugin : PluginBase
         {
             Type pluginType = typeof(TPlugin);
 
@@ -103,16 +135,28 @@ namespace AppDomains.Example.Plugin.Core
             return null;
         }
 
-        private TPlugin CreatePluginInstance<TPlugin>() where TPlugin : PluginBase, new()
+        private TPlugin CreatePluginInstance<TPlugin>() where TPlugin : PluginBase
         {
-            var appDomainSetup = new AppDomainSetup {ApplicationBase = _basePath};
+            var appDomainSetup = new AppDomainSetup
+            {
+                ApplicationBase = _basePath
+            };
 
             var appDomain = AppDomain.CreateDomain(Guid.NewGuid().ToString(), new Evidence(), appDomainSetup);
             var pluginType = typeof(TPlugin);
-            var pluginInstance = appDomain.CreateInstanceAndUnwrap(pluginType.Assembly.FullName, pluginType.FullName) as TPlugin;
+            var pluginInstance = appDomain.CreateInstanceAndUnwrap(
+                pluginType.Assembly.FullName,
+                pluginType.FullName,
+                true,
+                BindingFlags.Default,
+                null,
+                new object[] {_initialLifeTime, _renewalOnCallTime},
+                null,
+                null
+                ) as TPlugin;
 
             IList<PluginTokenBase> pluginTokens;
-            var pluginToken = new PluginToken<TPlugin>("1", pluginInstance, appDomain);
+            var pluginToken = new PluginToken<TPlugin>("1", pluginInstance, appDomain, _pluginLifetimeManagerFactory.Create<TPlugin>(this));
             if (!_plugins.TryGetValue(pluginType, out pluginTokens))
             {
                 pluginTokens = new List<PluginTokenBase>();

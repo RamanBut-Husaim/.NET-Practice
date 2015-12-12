@@ -5,6 +5,10 @@ namespace AppDomains.Example.Plugin
 {
     public sealed class CalculatorPlugin : PluginBase, ICalculatorPlugin
     {
+        public CalculatorPlugin(TimeSpan initialLifeTime, TimeSpan renewalOnCallTime) : base(initialLifeTime, renewalOnCallTime)
+        {
+        }
+
         public bool IsPrime(int number)
         {
             if (number <= 0)

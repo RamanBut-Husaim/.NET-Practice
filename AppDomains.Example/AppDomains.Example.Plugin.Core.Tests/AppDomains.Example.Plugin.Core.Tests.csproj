@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FakeCalculatorPlugin.cs" />
+    <Compile Include="FakePluginLifetimeManager.cs" />
+    <Compile Include="FakePluginLifetimeManagerFactory.cs" />
     <Compile Include="PluginManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

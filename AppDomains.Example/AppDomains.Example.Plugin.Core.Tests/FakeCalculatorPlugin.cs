@@ -7,7 +7,7 @@ namespace AppDomains.Example.Plugin.Core.Tests
     {
         private readonly string _appDomainName;
 
-        public FakeCalculatorPlugin()
+        public FakeCalculatorPlugin(TimeSpan initialLifeTime, TimeSpan renewalOnCallTime) : base(initialLifeTime, renewalOnCallTime)
         {
             _appDomainName = AppDomain.CurrentDomain.FriendlyName;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,6 +46,31 @@ namespace AppDomains.Example.Plugin.Core.Tests
             FakeCalculatorPlugin secondLoad = pluginManager.Load<FakeCalculatorPlugin>();
 
             Assert.Equal(firstLoad, secondLoad);
+        }
+
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        public void Load_WhenTheLifetimeIsExpired_ThePluginIsUnloaded(int waitMilliseconds)
+        {
+            using (var autoResetEvent = new AutoResetEvent(false))
+            {
+                var fakePluginLifetimeManagerFactory = new FakePluginLifetimeManagerFactory(autoResetEvent);
+
+                var pluginManager = new PluginManager(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    TimeSpan.FromMilliseconds(waitMilliseconds),
+                    TimeSpan.FromMilliseconds(waitMilliseconds),
+                    fakePluginLifetimeManagerFactory);
+
+                var plugin = pluginManager.Load<FakeCalculatorPlugin>();
+
+                autoResetEvent.WaitOne(TimeSpan.FromMinutes(1));
+
+                var pluginLifetimeManager = fakePluginLifetimeManagerFactory.LastPluginLifetimeManager as FakePluginLifetimeManager<FakeCalculatorPlugin>;
+
+                Assert.True(pluginLifetimeManager.Unloaded);
+            }
         }
 
         [Fact]

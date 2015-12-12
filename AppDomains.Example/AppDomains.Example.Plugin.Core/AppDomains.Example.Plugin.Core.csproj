@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPluginLifetimeManager.cs" />
+    <Compile Include="IPluginLifetimeManagerFactory.cs" />
     <Compile Include="IPluginManager.cs" />
+    <Compile Include="PluginLifetimeManager.cs" />
+    <Compile Include="PluginLifetimeManagerFactory.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="PluginToken.cs" />
     <Compile Include="PluginTokenBase.cs" />

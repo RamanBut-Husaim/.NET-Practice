@@ -51,7 +51,7 @@ namespace AppDomains.Example.Plugin.Core
 
         public TPlugin Load<TPlugin>() where TPlugin : PluginBase
         {
-            TPlugin plugin = this.GetPluginIfExists<TPlugin>();
+            TPlugin plugin = this.GetPlugin<TPlugin>();
             if (plugin != null)
             {
                 return plugin;
@@ -64,7 +64,7 @@ namespace AppDomains.Example.Plugin.Core
 
         public bool IsLoaded<TPlugin>() where TPlugin : PluginBase
         {
-            TPlugin plugin = this.GetPluginIfExists<TPlugin>();
+            TPlugin plugin = this.GetPlugin<TPlugin>();
 
             return plugin != null;
         }
@@ -76,59 +76,41 @@ namespace AppDomains.Example.Plugin.Core
                 throw new InvalidOperationException("The plugin has already been unloaded.");
             }
 
-            this.UnloadPlugins<TPlugin>();
-        }
-
-        private void UnloadPlugins<TPlugin>() where TPlugin : PluginBase
-        {
-            var pluginType = typeof(TPlugin);
-
-            IList<Exception> exceptions = new List<Exception>();
-            IList<PluginTokenBase> remainingPlugins = new List<PluginTokenBase>();
-            IList<PluginTokenBase> pluginTokens = _plugins[pluginType].ToList();
-
-            foreach (var pluginTokenBase in pluginTokens)
-            {
-                try
-                {
-                    this.UnloadInternal(pluginTokenBase as PluginToken<TPlugin>);
-                }
-                catch (CannotUnloadAppDomainException ex)
-                {
-                    exceptions.Add(ex);
-                    remainingPlugins.Add(pluginTokenBase);
-                }
-            }
-
-            _plugins[pluginType] = remainingPlugins;
-
-            if (exceptions.Count > 0)
-            {
-                throw new AggregateException("Some versions of the plugin has not been unloaded.", exceptions);
-            }
+            PluginToken<TPlugin> pluginToken = this.GetPluginToken<TPlugin>();
+            this.UnloadInternal(pluginToken);
         }
 
         private void UnloadInternal<TPlugin>(PluginToken<TPlugin> plugin) where TPlugin : PluginBase
         {
             if (plugin != null)
             {
+                var pluginVersionAndType = this.GetPluginMetaInfo<TPlugin>();
                 AppDomain.Unload(plugin.AppDomain);
+                _plugins[pluginVersionAndType.Item2].Remove(plugin);
             }
         }
 
-        private TPlugin GetPluginIfExists<TPlugin>() where TPlugin : PluginBase
+        private PluginToken<TPlugin> GetPluginToken<TPlugin>() where TPlugin : PluginBase
         {
-            Type pluginType = typeof(TPlugin);
+            var pluginVersionAndType = this.GetPluginMetaInfo<TPlugin>();
 
             IList<PluginTokenBase> pluginTokens;
-            if (_plugins.TryGetValue(pluginType, out pluginTokens))
+            if (_plugins.TryGetValue(pluginVersionAndType.Item2, out pluginTokens))
             {
-                var pluginToken = pluginTokens.First() as PluginToken<TPlugin>;
-                if (pluginToken == null)
-                {
-                    throw new ArgumentNullException("The stored plugin is invalid!");
-                }
+                var pluginToken = pluginTokens.FirstOrDefault(p => p.Version == pluginVersionAndType.Item1) as PluginToken<TPlugin>;
 
+                return pluginToken;
+            }
+
+            return null;
+        }
+
+        private TPlugin GetPlugin<TPlugin>() where TPlugin : PluginBase
+        {
+            var pluginToken = this.GetPluginToken<TPlugin>();
+
+            if (pluginToken != null)
+            {
                 return pluginToken.Plugin;
             }
 
@@ -136,6 +118,27 @@ namespace AppDomains.Example.Plugin.Core
         }
 
         private TPlugin CreatePluginInstance<TPlugin>() where TPlugin : PluginBase
+        {
+            var pluginVersionAndType = this.GetPluginMetaInfo<TPlugin>();
+
+            this.GuardPluginVersion(pluginVersionAndType.Item2, pluginVersionAndType.Item1);
+
+            PluginToken<TPlugin> pluginToken = this.CreatePluginToken<TPlugin>(pluginVersionAndType.Item1);
+
+            IList<PluginTokenBase> pluginTokens;
+
+            if (!_plugins.TryGetValue(pluginVersionAndType.Item2, out pluginTokens))
+            {
+                pluginTokens = new List<PluginTokenBase>();
+                _plugins.Add(pluginVersionAndType.Item2, pluginTokens);
+            }
+
+            pluginTokens.Add(pluginToken);
+
+            return pluginToken.Plugin;
+        }
+
+        private PluginToken<TPlugin> CreatePluginToken<TPlugin>(string pluginVersion) where TPlugin : PluginBase
         {
             var appDomainSetup = new AppDomainSetup
             {
@@ -150,22 +153,73 @@ namespace AppDomains.Example.Plugin.Core
                 true,
                 BindingFlags.Default,
                 null,
-                new object[] {_initialLifeTime, _renewalOnCallTime},
+                new object[] { _initialLifeTime, _renewalOnCallTime },
                 null,
                 null
                 ) as TPlugin;
 
-            IList<PluginTokenBase> pluginTokens;
-            var pluginToken = new PluginToken<TPlugin>("1", pluginInstance, appDomain, _pluginLifetimeManagerFactory.Create<TPlugin>(this));
-            if (!_plugins.TryGetValue(pluginType, out pluginTokens))
+
+            var pluginToken = new PluginToken<TPlugin>(pluginVersion, pluginInstance, appDomain, _pluginLifetimeManagerFactory.Create<TPlugin>(this));
+
+            return pluginToken;
+        }
+
+        private Tuple<string, Type> GetPluginMetaInfo<TPlugin>() where TPlugin : PluginBase
+        {
+            var pluginVersion = this.GetVersionName<TPlugin>();
+            this.GuardVersion(pluginVersion);
+
+            var pluginApplicationType = this.GetPluginType<TPlugin>();
+            this.GuardPluginType(pluginApplicationType);
+
+            return new Tuple<string, Type>(pluginVersion, pluginApplicationType);
+        }
+
+        private string GetVersionName<TPlugin>() where TPlugin : PluginBase
+        {
+            var pluginType = typeof (TPlugin);
+
+            var versionAttribute = pluginType.GetCustomAttribute<PluginVersionAttribute>();
+
+            return versionAttribute.Version;
+        }
+
+        private Type GetPluginType<TPlugin>() where TPlugin : PluginBase
+        {
+            var pluginType = typeof(TPlugin);
+
+            var versionAttribute = pluginType.GetCustomAttribute<PluginVersionAttribute>();
+
+            return versionAttribute.PluginType;
+        }
+
+        private void GuardVersion(string version)
+        {
+            if (string.IsNullOrEmpty(version))
             {
-                pluginTokens = new List<PluginTokenBase>();
-                _plugins.Add(pluginType, pluginTokens);
+                throw new InvalidOperationException("The version could not be empty.");
             }
+        }
 
-            pluginTokens.Add(pluginToken);
+        private void GuardPluginType(Type pluginType)
+        {
+            if (!typeof (IPlugin).IsAssignableFrom(pluginType))
+            {
+                throw new InvalidOperationException("The plugin type should implement IPlugin.");
+            }
+        }
 
-            return pluginInstance;
+        private void GuardPluginVersion(Type pluginType, string version)
+        {
+            IList<PluginTokenBase> pluginTokens;
+
+            if (_plugins.TryGetValue(pluginType, out pluginTokens))
+            {
+                if (pluginTokens.Select(p => p.Version).Contains(version))
+                {
+                    throw new InvalidOperationException("The plugin with the same version has already been loaded.");
+                }
+            }
         }
     }
 }

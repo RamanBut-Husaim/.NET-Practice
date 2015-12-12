@@ -74,6 +74,18 @@ namespace AppDomains.Example.Plugin.Core.Tests
         }
 
         [Fact]
+        public void Load_WhenTwoVersionsOfThePluginAreLoaded_OperationIsSuccessfull()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            FakeCalculatorPlugin plugin = pluginManager.Load<FakeCalculatorPlugin>();
+            FakeAnotherCalculatorPlugin anotherPlugin = pluginManager.Load<FakeAnotherCalculatorPlugin>();
+
+            Assert.NotNull(plugin);
+            Assert.NotNull(anotherPlugin);
+        }
+
+        [Fact]
         public void Unload_WhenThePluginHasBeenLoaded_TheUnloadWillBeSuccessfull()
         {
             var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
@@ -101,6 +113,40 @@ namespace AppDomains.Example.Plugin.Core.Tests
             pluginManager.Unload<FakeCalculatorPlugin>();
 
             Assert.Throws<InvalidOperationException>(() => pluginManager.Unload<FakeCalculatorPlugin>());
+        }
+
+        [Fact]
+        public void Unload_WhenOneVersionOfThePluginIsUnloaded_TheSecondExists()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            pluginManager.Load<FakeCalculatorPlugin>();
+            pluginManager.Load<FakeAnotherCalculatorPlugin>();
+
+            pluginManager.Unload<FakeCalculatorPlugin>();
+
+            Assert.True(pluginManager.IsLoaded<FakeAnotherCalculatorPlugin>());
+        }
+
+        [Fact]
+        public void IsLoaded_WhenTheTypeWasLoaded_ReturnsTrue()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            pluginManager.Load<FakeCalculatorPlugin>();
+
+            Assert.True(pluginManager.IsLoaded<FakeCalculatorPlugin>());
+        }
+
+        [Fact]
+        public void IsLoaded_WhenTheTypeWasUnloaded_ReturnsFalse()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            pluginManager.Load<FakeCalculatorPlugin>();
+            pluginManager.Unload<FakeCalculatorPlugin>();
+
+            Assert.False(pluginManager.IsLoaded<FakeCalculatorPlugin>());
         }
     }
 }

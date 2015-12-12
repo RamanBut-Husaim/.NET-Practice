@@ -46,5 +46,35 @@ namespace AppDomains.Example.Plugin.Core.Tests
 
             Assert.Equal(firstLoad, secondLoad);
         }
+
+        [Fact]
+        public void Unload_WhenThePluginHasBeenLoaded_TheUnloadWillBeSuccessfull()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            var plugin = pluginManager.Load<FakeCalculatorPlugin>();
+            pluginManager.Unload<FakeCalculatorPlugin>();
+
+            Assert.Throws<AppDomainUnloadedException>(() => plugin.IsPrime(3));
+        }
+
+        [Fact]
+        public void Unload_WhenThePluginHasNotBeenLoaded_TheExceptionOccurs()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            Assert.Throws<InvalidOperationException>(() => pluginManager.Unload<FakeCalculatorPlugin>());
+        }
+
+        [Fact]
+        public void Unload_WhenThePluginUnloadedSecondTime_TheExceptionOccurs()
+        {
+            var pluginManager = new PluginManager(AppDomain.CurrentDomain.BaseDirectory);
+
+            pluginManager.Load<FakeCalculatorPlugin>();
+            pluginManager.Unload<FakeCalculatorPlugin>();
+
+            Assert.Throws<InvalidOperationException>(() => pluginManager.Unload<FakeCalculatorPlugin>());
+        }
     }
 }

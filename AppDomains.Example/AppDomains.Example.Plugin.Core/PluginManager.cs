@@ -36,6 +36,54 @@ namespace AppDomains.Example.Plugin.Core
             return pluginInstance;
         }
 
+        public void Unload<TPlugin>() where TPlugin : PluginBase, new()
+        {
+            TPlugin plugin = this.GetPluginIfExists<TPlugin>();
+            if (plugin == null)
+            {
+                throw new InvalidOperationException("The plugin has already been unloaded.");
+            }
+
+            this.UnloadPlugins<TPlugin>();
+        }
+
+        private void UnloadPlugins<TPlugin>() where TPlugin : PluginBase, new()
+        {
+            var pluginType = typeof(TPlugin);
+
+            IList<Exception> exceptions = new List<Exception>();
+            IList<PluginTokenBase> remainingPlugins = new List<PluginTokenBase>();
+            IList<PluginTokenBase> pluginTokens = _plugins[pluginType].ToList();
+
+            foreach (var pluginTokenBase in pluginTokens)
+            {
+                try
+                {
+                    this.UnloadInternal(pluginTokenBase as PluginToken<TPlugin>);
+                }
+                catch (CannotUnloadAppDomainException ex)
+                {
+                    exceptions.Add(ex);
+                    remainingPlugins.Add(pluginTokenBase);
+                }
+            }
+
+            _plugins[pluginType] = remainingPlugins;
+
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException("Some versions of the plugin has not been unloaded.", exceptions);
+            }
+        }
+
+        private void UnloadInternal<TPlugin>(PluginToken<TPlugin> plugin) where TPlugin : PluginBase, new()
+        {
+            if (plugin != null)
+            {
+                AppDomain.Unload(plugin.AppDomain);
+            }
+        }
+
         private TPlugin GetPluginIfExists<TPlugin>() where TPlugin : PluginBase, new()
         {
             Type pluginType = typeof(TPlugin);
@@ -57,9 +105,9 @@ namespace AppDomains.Example.Plugin.Core
 
         private TPlugin CreatePluginInstance<TPlugin>() where TPlugin : PluginBase, new()
         {
-            var appDomianSetup = new AppDomainSetup {ApplicationBase = _basePath};
+            var appDomainSetup = new AppDomainSetup {ApplicationBase = _basePath};
 
-            var appDomain = AppDomain.CreateDomain(Guid.NewGuid().ToString(), new Evidence(), appDomianSetup);
+            var appDomain = AppDomain.CreateDomain(Guid.NewGuid().ToString(), new Evidence(), appDomainSetup);
             var pluginType = typeof(TPlugin);
             var pluginInstance = appDomain.CreateInstanceAndUnwrap(pluginType.Assembly.FullName, pluginType.FullName) as TPlugin;
 

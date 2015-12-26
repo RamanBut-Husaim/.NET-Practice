@@ -53,5 +53,21 @@ namespace UnmanagedCode.Example.Tests
             _outputWriter.WriteLine("The current idle level: {0} %", powerInformation.Idleness);
             _outputWriter.WriteLine("The time remaining in the idle timer: {0} seconds", powerInformation.TimeRemaining);
         }
+
+        [Fact]
+        public void CommitHibernationFile_WhenOperationIsRequested_ReturnsSuccessfully()
+        {
+            bool reservationSucceeded = _powerManager.CommitHibernationFile();
+
+            Assert.True(reservationSucceeded);
+        }
+
+        [Fact]
+        public void UncommitHibernationFile_WhenOperationIsRequested_ReturnsSuccessfully()
+        {
+            bool reservationSucceeded = _powerManager.UncommitHibernationFile();
+
+            Assert.True(reservationSucceeded);
+        }
     }
 }

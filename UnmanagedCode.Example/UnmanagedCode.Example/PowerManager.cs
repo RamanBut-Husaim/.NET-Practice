@@ -32,34 +32,48 @@ namespace UnmanagedCode.Example
         public SystemBatteryState GetSystemBatteryState()
         {
             return this.GetSystemInformation<SystemBatteryState>(PowerInformationLevel.SystemBatteryState);
-            //IntPtr ptr = IntPtr.Zero;
-
-            //try
-            //{
-            //    int outputSize = Marshal.SizeOf(typeof (SystemBatteryState));
-            //    ptr = Marshal.AllocCoTaskMem(outputSize);
-            //    uint operationCompletionCode = CallNtPowerInformation((int) PowerInformationLevel.SystemBatteryState, ptr, 0, ptr, (uint) outputSize);
-            //    if (operationCompletionCode != SuccessfullCompletion)
-            //    {
-            //        Marshal.ThrowExceptionForHR((int) operationCompletionCode);
-            //    }
-
-            //    var systemBatteryState = Marshal.PtrToStructure<SystemBatteryState>(ptr);
-
-            //    return systemBatteryState;
-            //}
-            //finally
-            //{
-            //    if (ptr != IntPtr.Zero)
-            //    {
-            //        Marshal.FreeCoTaskMem(ptr);
-            //    }
-            //}
         }
 
         public SystemPowerInformation GetSystemPowerInformation()
         {
             return this.GetSystemInformation<SystemPowerInformation>(PowerInformationLevel.SystemPowerInformation);
+        }
+
+        public bool CommitHibernationFile()
+        {
+            return this.ManageHibernationFile(true);
+        }
+
+        public bool UncommitHibernationFile()
+        {
+            return this.ManageHibernationFile(false);
+        }
+
+        private bool ManageHibernationFile(bool reserve)
+        {
+            IntPtr ptr = IntPtr.Zero;
+
+            try
+            {
+                int inputSize = Marshal.SizeOf(typeof(int));
+                ptr = Marshal.AllocCoTaskMem(inputSize);
+                Marshal.WriteInt32(ptr, reserve ? 1 : 0);
+
+                uint operationCompletionCode = CallNtPowerInformation((int)PowerInformationLevel.SystemReserveHiberFile, ptr, (uint)inputSize, IntPtr.Zero, 0);
+                if (operationCompletionCode != SuccessfullCompletion)
+                {
+                    Marshal.ThrowExceptionForHR((int)operationCompletionCode);
+                }
+
+                return true;
+            }
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                {
+                    Marshal.FreeCoTaskMem(ptr);
+                }
+            }
         }
 
         private T GetSystemInformation<T>(PowerInformationLevel level)
@@ -70,7 +84,7 @@ namespace UnmanagedCode.Example
             {
                 int outputSize = Marshal.SizeOf(typeof(T));
                 ptr = Marshal.AllocCoTaskMem(outputSize);
-                uint operationCompletionCode = CallNtPowerInformation((int)level, ptr, 0, ptr, (uint)outputSize);
+                uint operationCompletionCode = CallNtPowerInformation((int)level, IntPtr.Zero, 0, ptr, (uint)outputSize);
                 if (operationCompletionCode != SuccessfullCompletion)
                 {
                     Marshal.ThrowExceptionForHR((int)operationCompletionCode);

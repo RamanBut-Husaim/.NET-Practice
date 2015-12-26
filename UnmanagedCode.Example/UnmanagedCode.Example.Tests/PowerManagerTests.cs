@@ -36,7 +36,8 @@ namespace UnmanagedCode.Example.Tests
         [Fact]
         public void GetSystemBatteryState_WhenStateIsRequested_ReturnsSuccessfully()
         {
-            var batteryState = _powerManager.GetSystemBatteryState();
+            // the output for PC with UPS is different for each call. seems strange.
+            SystemBatteryState batteryState = _powerManager.GetSystemBatteryState();
 
             _outputWriter.WriteLine("Max Capacity: {0}", batteryState.MaxCapacity);
             _outputWriter.WriteLine("Remaining Capacity: {0}", batteryState.RemainingCapacity);

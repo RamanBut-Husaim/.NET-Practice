@@ -16,8 +16,10 @@ namespace UnmanagedCode.Example
             IntPtr lpInputBuffer,
             uint nInputBufferSize,
             [Out] IntPtr lpOutputBuffer,
-            uint nOutputBufferSize
-            );
+            uint nOutputBufferSize);
+
+        [DllImport("powrprof.dll", SetLastError = true)]
+        private static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
 
         public DateTime GetLastSleepTime()
         {
@@ -47,6 +49,11 @@ namespace UnmanagedCode.Example
         public bool UncommitHibernationFile()
         {
             return this.ManageHibernationFile(false);
+        }
+
+        public void SendToSleep()
+        {
+            SetSuspendState(false, false, false);
         }
 
         private bool ManageHibernationFile(bool reserve)

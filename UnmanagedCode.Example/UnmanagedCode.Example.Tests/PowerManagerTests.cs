@@ -69,5 +69,13 @@ namespace UnmanagedCode.Example.Tests
 
             Assert.True(reservationSucceeded);
         }
+
+        // [Fact]
+        public void SendToSleep_WhenOperationisRequested_SendToSleep()
+        {
+            _powerManager.SendToSleep();
+
+            Assert.True(true);
+        }
     }
 }

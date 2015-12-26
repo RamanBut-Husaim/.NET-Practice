@@ -9,5 +9,11 @@ namespace UnmanagedCode.Example
         DateTime GetLastWakeTime();
 
         SystemBatteryState GetSystemBatteryState();
+
+        bool CommitHibernationFile();
+
+        bool UncommitHibernationFile();
+
+        void SendToSleep();
     }
 }

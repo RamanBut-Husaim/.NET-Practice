@@ -32,5 +32,15 @@ namespace UnmanagedCode.Example.Tests
 
             _outputWriter.WriteLine("Last wake time: {0}", lastWakeTime.ToLocalTime());
         }
+
+        [Fact]
+        public void GetSystemBatteryState_WhenStateIsRequested_ReturnsSuccessfully()
+        {
+            var batteryState = _powerManager.GetSystemBatteryState();
+
+            _outputWriter.WriteLine("Max Capacity: {0}", batteryState.MaxCapacity);
+            _outputWriter.WriteLine("Remaining Capacity: {0}", batteryState.RemainingCapacity);
+            _outputWriter.WriteLine("Estimated time: {0} seconds", batteryState.EstimatedTime);
+        }
     }
 }

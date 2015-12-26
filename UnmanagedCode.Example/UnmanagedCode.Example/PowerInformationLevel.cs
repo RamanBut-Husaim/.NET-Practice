@@ -1,6 +1,6 @@
 ﻿namespace UnmanagedCode.Example
 {
-    public enum PowerInformationLevel
+    internal enum PowerInformationLevel
     {
         SystemPowerPolicyAc = 0,
         SystemPowerPolicyDc = 1,

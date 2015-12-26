@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace UnmanagedCode.Example
 {
-    public sealed class PowerManager
+    public sealed class PowerManager : IPowerManager
     {
         private const uint SuccessfullCompletion = 0;
 
@@ -27,6 +27,33 @@ namespace UnmanagedCode.Example
         public DateTime GetLastWakeTime()
         {
             return this.GetLastTime(PowerInformationLevel.LastWakeTime);
+        }
+
+        public SystemBatteryState GetSystemBatteryState()
+        {
+            IntPtr ptr = IntPtr.Zero;
+
+            try
+            {
+                int outputSize = Marshal.SizeOf(typeof (SystemBatteryState));
+                ptr = Marshal.AllocCoTaskMem(outputSize);
+                uint operationCompletionCode = CallNtPowerInformation((int) PowerInformationLevel.SystemBatteryState, ptr, 0, ptr, (uint) outputSize);
+                if (operationCompletionCode != SuccessfullCompletion)
+                {
+                    Marshal.ThrowExceptionForHR((int) operationCompletionCode);
+                }
+
+                var systemBatteryState = Marshal.PtrToStructure<SystemBatteryState>(ptr);
+
+                return systemBatteryState;
+            }
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                {
+                    Marshal.FreeCoTaskMem(ptr);
+                }
+            }
         }
 
         private DateTime GetLastTime(PowerInformationLevel level)

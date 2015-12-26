@@ -43,5 +43,15 @@ namespace UnmanagedCode.Example.Tests
             _outputWriter.WriteLine("Remaining Capacity: {0}", batteryState.RemainingCapacity);
             _outputWriter.WriteLine("Estimated time: {0} seconds", batteryState.EstimatedTime);
         }
+
+        [Fact]
+        public void GetSystemPowerInformation_WhenStateIsRequested_ReturnsSuccessfully()
+        {
+            SystemPowerInformation powerInformation = _powerManager.GetSystemPowerInformation();
+
+            _outputWriter.WriteLine("Maximum Idleness Allowed: {0}", powerInformation.MaxIdlenessAllowed);
+            _outputWriter.WriteLine("The current idle level: {0} %", powerInformation.Idleness);
+            _outputWriter.WriteLine("The time remaining in the idle timer: {0} seconds", powerInformation.TimeRemaining);
+        }
     }
 }

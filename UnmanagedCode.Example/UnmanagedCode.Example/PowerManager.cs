@@ -31,19 +31,52 @@ namespace UnmanagedCode.Example
 
         public SystemBatteryState GetSystemBatteryState()
         {
+            return this.GetSystemInformation<SystemBatteryState>(PowerInformationLevel.SystemBatteryState);
+            //IntPtr ptr = IntPtr.Zero;
+
+            //try
+            //{
+            //    int outputSize = Marshal.SizeOf(typeof (SystemBatteryState));
+            //    ptr = Marshal.AllocCoTaskMem(outputSize);
+            //    uint operationCompletionCode = CallNtPowerInformation((int) PowerInformationLevel.SystemBatteryState, ptr, 0, ptr, (uint) outputSize);
+            //    if (operationCompletionCode != SuccessfullCompletion)
+            //    {
+            //        Marshal.ThrowExceptionForHR((int) operationCompletionCode);
+            //    }
+
+            //    var systemBatteryState = Marshal.PtrToStructure<SystemBatteryState>(ptr);
+
+            //    return systemBatteryState;
+            //}
+            //finally
+            //{
+            //    if (ptr != IntPtr.Zero)
+            //    {
+            //        Marshal.FreeCoTaskMem(ptr);
+            //    }
+            //}
+        }
+
+        public SystemPowerInformation GetSystemPowerInformation()
+        {
+            return this.GetSystemInformation<SystemPowerInformation>(PowerInformationLevel.SystemPowerInformation);
+        }
+
+        private T GetSystemInformation<T>(PowerInformationLevel level)
+        {
             IntPtr ptr = IntPtr.Zero;
 
             try
             {
-                int outputSize = Marshal.SizeOf(typeof (SystemBatteryState));
+                int outputSize = Marshal.SizeOf(typeof(T));
                 ptr = Marshal.AllocCoTaskMem(outputSize);
-                uint operationCompletionCode = CallNtPowerInformation((int) PowerInformationLevel.SystemBatteryState, ptr, 0, ptr, (uint) outputSize);
+                uint operationCompletionCode = CallNtPowerInformation((int)level, ptr, 0, ptr, (uint)outputSize);
                 if (operationCompletionCode != SuccessfullCompletion)
                 {
-                    Marshal.ThrowExceptionForHR((int) operationCompletionCode);
+                    Marshal.ThrowExceptionForHR((int)operationCompletionCode);
                 }
 
-                var systemBatteryState = Marshal.PtrToStructure<SystemBatteryState>(ptr);
+                var systemBatteryState = Marshal.PtrToStructure<T>(ptr);
 
                 return systemBatteryState;
             }
@@ -54,6 +87,7 @@ namespace UnmanagedCode.Example
                     Marshal.FreeCoTaskMem(ptr);
                 }
             }
+
         }
 
         private DateTime GetLastTime(PowerInformationLevel level)

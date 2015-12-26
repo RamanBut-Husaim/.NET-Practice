@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B78B6E97-92F6-4B1B-BDDD-9416356C87FA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnmanagedCode.Example</RootNamespace>
     <AssemblyName>UnmanagedCode.Example</AssemblyName>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,9 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPowerManager.cs" />
+    <Compile Include="IPowerManagerCom.cs" />
     <Compile Include="PowerInformationLevel.cs" />
     <Compile Include="PowerManager.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="PowerManagerCom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemBatteryState.cs" />
     <Compile Include="SystemPowerInformation.cs" />

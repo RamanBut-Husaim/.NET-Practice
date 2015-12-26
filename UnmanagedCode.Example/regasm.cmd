@@ -1,0 +1,1 @@
+regasm.exe ".\UnmanagedCode.Example\bin\debug\UnmanagedCode.Example.dll" /tlb /codebase

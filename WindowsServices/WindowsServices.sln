@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Task.txt = Task.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsServices.Core", "WindowsServices.Core\WindowsServices.Core.csproj", "{18878AE5-2585-4D95-A4F6-DD785D940665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsServices.FileWatching", "WindowsServices.FileWatching\WindowsServices.FileWatching.csproj", "{CA732E95-73A8-457A-B1C9-D966B819612F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{E67D31A2-8765-4B67-8623-1DBC2C0814FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E67D31A2-8765-4B67-8623-1DBC2C0814FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E67D31A2-8765-4B67-8623-1DBC2C0814FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18878AE5-2585-4D95-A4F6-DD785D940665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18878AE5-2585-4D95-A4F6-DD785D940665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18878AE5-2585-4D95-A4F6-DD785D940665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18878AE5-2585-4D95-A4F6-DD785D940665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA732E95-73A8-457A-B1C9-D966B819612F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA732E95-73A8-457A-B1C9-D966B819612F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA732E95-73A8-457A-B1C9-D966B819612F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA732E95-73A8-457A-B1C9-D966B819612F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

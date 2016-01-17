@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E67D31A2-8765-4B67-8623-1DBC2C0814FA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{CA732E95-73A8-457A-B1C9-D966B819612F}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsServices.Host</RootNamespace>
-    <AssemblyName>WindowsServices.Host</AssemblyName>
+    <RootNamespace>WindowsServices.FileWatching</RootNamespace>
+    <AssemblyName>WindowsServices.FileWatching</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,21 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentCommandLineParser, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentCommandLineParser.1.4.3\lib\net35\FluentCommandLineParser.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="LightInject, Version=4.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.4.0.4\lib\net45\LightInject.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,40 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ApplicationArguments.cs" />
-    <Compile Include="Configuration\ApplicationArgumentsConfigurationSetup.cs" />
-    <Compile Include="Configuration\CompositionRoot.cs" />
-    <Compile Include="FileSystemMonitorService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FileSystemMonitorServiceConfiguration.cs" />
-    <Compile Include="FileSystemMonitorServiceFactory.cs" />
-    <Compile Include="IFileSystemMonitorServiceFactory.cs" />
-    <Compile Include="LoggingFileSystemMonitorServiceFactory.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="FileSystemEventArgsExtensions.cs" />
+    <Compile Include="FolderWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WindowsServices.Core\WindowsServices.Core.csproj">
       <Project>{18878ae5-2585-4d95-a4f6-dd785d940665}</Project>
       <Name>WindowsServices.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsServices.FileWatching\WindowsServices.FileWatching.csproj">
-      <Project>{ca732e95-73a8-457a-b1c9-d966b819612f}</Project>
-      <Name>WindowsServices.FileWatching</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -15,7 +15,10 @@ namespace WindowsServices.Host.Configuration
         {
             serviceRegistry.Register<FileSystemMonitorServiceConfiguration, FileSystemMonitorService>(
                 (factory, configuration) =>
-                    new FileSystemMonitorService(configuration, factory.GetInstance<IFolderWatcherFactory>(CompositionRoot.LoggingFolderWatcherFactory)));
+                    new FileSystemMonitorService(
+                        configuration,
+                        factory.GetInstance<IFolderWatcherFactory>(CompositionRoot.LoggingFolderWatcherFactory),
+                        factory.GetInstance<ILogger>()));
 
             serviceRegistry.RegisterInstance<ILogger>(LogManager.GetLogger("Application Logger"));
             serviceRegistry.Register<IFileSystemMonitorServiceFactory, LoggingFileSystemMonitorServiceFactory>(CompositionRoot.LoggingFileSystemMonitorServiceFactory);

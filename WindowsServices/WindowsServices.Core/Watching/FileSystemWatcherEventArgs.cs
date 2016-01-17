@@ -9,9 +9,9 @@ namespace WindowsServices.Core.Watching
             string fullPath,
             FileSystemWatcherChangeType changeType)
         {
-            Name = name;
-            FullPath = fullPath;
-            ChangeType = changeType;
+            this.Name = name;
+            this.FullPath = fullPath;
+            this.ChangeType = changeType;
         }
 
         public string Name { get; private set; }
@@ -19,5 +19,10 @@ namespace WindowsServices.Core.Watching
         public string FullPath { get; private set; }
 
         public FileSystemWatcherChangeType ChangeType { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format("File '{0}' has been changed: {1}", this.Name, this.ChangeType);
+        }
     }
 }

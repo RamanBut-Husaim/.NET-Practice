@@ -16,5 +16,10 @@
         public string OldName { get; private set; }
 
         public string OldPath { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format("File renamed from '{0}' to '{1}'", this.Name, this.OldName);
+        }
     }
 }

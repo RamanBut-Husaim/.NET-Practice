@@ -1,7 +1,6 @@
-﻿using WindowsServices.Core.Watching;
-using NLog;
+﻿using NLog;
 
-namespace WindowsServices.Core
+namespace WindowsServices.Core.Watching
 {
     public sealed class LoggingFolderWatcherFactory : IFolderWatcherFactory
     {

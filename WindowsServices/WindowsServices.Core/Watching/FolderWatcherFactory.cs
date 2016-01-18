@@ -1,7 +1,6 @@
 ﻿using System;
-using WindowsServices.Core.Watching;
 
-namespace WindowsServices.Core
+namespace WindowsServices.Core.Watching
 {
     public sealed class FolderWatcherFactory : IFolderWatcherFactory
     {

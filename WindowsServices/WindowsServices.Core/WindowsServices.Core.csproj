@@ -44,9 +44,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FolderWatcherFactory.cs" />
-    <Compile Include="IFolderWatcherFactory.cs" />
-    <Compile Include="LoggingFolderWatcherFactory.cs" />
+    <Compile Include="FileOperations\CopyOperation.cs" />
+    <Compile Include="FileOperations\FileOperationManager.cs" />
+    <Compile Include="FileOperations\ICopyOperation.cs" />
+    <Compile Include="FileOperations\IOperation.cs" />
+    <Compile Include="FileOperations\IPollingManager.cs" />
+    <Compile Include="FileOperations\IRenameOperation.cs" />
+    <Compile Include="FileOperations\LoggingPollingCopyOperation.cs" />
+    <Compile Include="FileOperations\LoggingPollingRenameOperation.cs" />
+    <Compile Include="FileOperations\OperationFactory.cs" />
+    <Compile Include="FileOperations\PollingCopyOperation.cs" />
+    <Compile Include="FileOperations\PollingManager.cs" />
+    <Compile Include="FileOperations\PollingRenameOperation.cs" />
+    <Compile Include="FileOperations\RenameOperation.cs" />
+    <Compile Include="Watching\FolderWatcherFactory.cs" />
+    <Compile Include="FileOperations\IFileOperationManager.cs" />
+    <Compile Include="Watching\IFolderWatcherFactory.cs" />
+    <Compile Include="Jobs\IJobManager.cs" />
+    <Compile Include="Watching\LoggingFolderWatcherFactory.cs" />
     <Compile Include="Watching\FileSystemWatcherChangeType.cs" />
     <Compile Include="Watching\FileSystemWatcherEventArgs.cs" />
     <Compile Include="Watching\FileSystemWatcherRenameEventArgs.cs" />

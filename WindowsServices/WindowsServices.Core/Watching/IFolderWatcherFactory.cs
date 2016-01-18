@@ -1,6 +1,4 @@
-﻿using WindowsServices.Core.Watching;
-
-namespace WindowsServices.Core
+﻿namespace WindowsServices.Core.Watching
 {
     public interface IFolderWatcherFactory
     {

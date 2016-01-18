@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using WindowsServices.Core.Watching;
 
-namespace WindowsServices.Core.Jobs
+namespace WindowsServices.Core.Services
 {
-    public interface IJobManager
+    public interface IFileService
     {
         void Process(IEnumerable<FileSystemWatcherEventArgs> watchArgs);
     }

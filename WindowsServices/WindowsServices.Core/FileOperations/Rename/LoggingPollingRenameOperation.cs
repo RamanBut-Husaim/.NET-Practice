@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NLog;
 
-namespace WindowsServices.Core.FileOperations
+namespace WindowsServices.Core.FileOperations.Rename
 {
     public sealed class LoggingPollingRenameOperation : IRenameOperation
     {

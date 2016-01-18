@@ -6,15 +6,15 @@ using WindowsServices.Core.FileOperations;
 using WindowsServices.Core.Watching;
 using NLog;
 
-namespace WindowsServices.Core.Jobs
+namespace WindowsServices.Core.Services
 {
-    public sealed class JobManager : IJobManager
+    public sealed class FileService : IFileService
     {
         private readonly FileOperationManagerFactory _fileOperationManagerFactory;
         private readonly ILogger _logger;
         private readonly string _destinationPath;
 
-        public JobManager(
+        public FileService(
             string destinationPath,
             FileOperationManagerFactory fileOperationManagerFactory,
             ILogger logger)

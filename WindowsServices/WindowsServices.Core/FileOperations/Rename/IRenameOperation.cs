@@ -1,4 +1,4 @@
-﻿namespace WindowsServices.Core.FileOperations
+﻿namespace WindowsServices.Core.FileOperations.Rename
 {
     public interface IRenameOperation : IOperation
     {

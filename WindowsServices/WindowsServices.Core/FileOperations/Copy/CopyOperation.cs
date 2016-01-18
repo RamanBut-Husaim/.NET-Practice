@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace WindowsServices.Core.FileOperations
+namespace WindowsServices.Core.FileOperations.Copy
 {
     public sealed class CopyOperation : ICopyOperation
     {

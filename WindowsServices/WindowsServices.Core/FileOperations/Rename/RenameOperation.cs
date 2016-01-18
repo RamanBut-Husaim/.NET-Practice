@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace WindowsServices.Core.FileOperations
+namespace WindowsServices.Core.FileOperations.Rename
 {
     public sealed class RenameOperation : IRenameOperation
     {

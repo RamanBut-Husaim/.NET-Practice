@@ -9,6 +9,7 @@ namespace WindowsServices.Core.Watching
         Deleted = 2,
         Changed = 4,
         Renamed = 8,
-        All = Renamed | Changed | Deleted | Created,
+        Synchronize = 16,
+        All = Renamed | Changed | Deleted | Created | Synchronize
     }
 }

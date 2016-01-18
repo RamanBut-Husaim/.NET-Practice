@@ -1,4 +1,4 @@
-﻿namespace WindowsServices.Core.FileOperations
+﻿namespace WindowsServices.Core.FileOperations.Copy
 {
     public interface ICopyOperation : IOperation
     {

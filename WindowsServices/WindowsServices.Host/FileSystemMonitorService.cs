@@ -4,8 +4,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsServices.Core.FileOperations;
-using WindowsServices.Core.Jobs;
+using WindowsServices.Core.Services;
 using WindowsServices.Core.Watching;
 using NLog;
 
@@ -20,8 +19,9 @@ namespace WindowsServices.Host
         private readonly ILogger _logger;
         private readonly IFolderWatcherFactory _folderWatcherFactory;
         private readonly IFolderWatcher _folderWatcher;
-        private readonly JobManagerFactory _jobManagerFactory;
-        private readonly string _destinationPath;
+        private readonly FileServiceFactory _jobManagerFactory;
+        private readonly SynchronizationServiceFactory _synchronizationServiceFactory;
+        private readonly FileSystemMonitorServiceConfiguration _configuration;
 
         private readonly ManualResetEventSlim _serviceShutdownEvent;
         private readonly Task _fileProcessingRoutine;
@@ -32,14 +32,16 @@ namespace WindowsServices.Host
         public FileSystemMonitorService(
             FileSystemMonitorServiceConfiguration configuration,
             IFolderWatcherFactory folderWatcherFactory,
-            JobManagerFactory jobManagerFactory,
+            FileServiceFactory jobManagerFactory,
+            SynchronizationServiceFactory synchronizationServiceFactory,
             ILogger logger)
         {
             _logger = logger;
             _folderWatcherFactory = folderWatcherFactory;
             _folderWatcher = folderWatcherFactory.Create(configuration.FolderToMonitor);
             _jobManagerFactory = jobManagerFactory;
-            _destinationPath = configuration.TargetFolder;
+            _synchronizationServiceFactory = synchronizationServiceFactory;
+            _configuration = configuration;
 
             _serviceShutdownEvent = new ManualResetEventSlim(false);
             _fileProcessingRoutine = new Task(this.RunServiceOperation, TaskCreationOptions.LongRunning);
@@ -106,6 +108,8 @@ namespace WindowsServices.Host
         {
             _logger.Trace("[Start]: Service routine operation.");
 
+            this.PerformSynchronization();
+
             while (true)
             {
                 IList<FileSystemWatcherEventArgs> workToPerform;
@@ -133,9 +137,18 @@ namespace WindowsServices.Host
             }
         }
 
+        private void PerformSynchronization()
+        {
+            ISynchronizationService synchronizationService = _synchronizationServiceFactory.Create(
+                _configuration.FolderToMonitor,
+                _configuration.TargetFolder);
+
+            synchronizationService.PerformSynchronization().Wait();
+        }
+
         private void ProcessOperations(IList<FileSystemWatcherEventArgs> operations)
         {
-            var jobManager = _jobManagerFactory.Create(_destinationPath);
+            var jobManager = _jobManagerFactory.Create(_configuration.TargetFolder);
 
             jobManager.Process(operations);
         }

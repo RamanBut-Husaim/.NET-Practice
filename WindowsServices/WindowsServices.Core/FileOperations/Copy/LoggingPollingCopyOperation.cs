@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NLog;
 
-namespace WindowsServices.Core.FileOperations
+namespace WindowsServices.Core.FileOperations.Copy
 {
     public sealed class LoggingPollingCopyOperation : ICopyOperation
     {

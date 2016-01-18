@@ -44,6 +44,7 @@ namespace WindowsServices.Core.FileOperations
                 }
                 catch (TException ex)
                 {
+                    _logger.Error("Polling number: {0}", i + 1);
                     _logger.Error(ex);
                 }
 

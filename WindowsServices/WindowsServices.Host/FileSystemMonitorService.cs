@@ -5,6 +5,7 @@ using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsServices.Core.FileOperations;
+using WindowsServices.Core.Jobs;
 using WindowsServices.Core.Watching;
 using NLog;
 
@@ -19,7 +20,8 @@ namespace WindowsServices.Host
         private readonly ILogger _logger;
         private readonly IFolderWatcherFactory _folderWatcherFactory;
         private readonly IFolderWatcher _folderWatcher;
-        private readonly IFileOperationManager _fileOperationManager;
+        private readonly JobManagerFactory _jobManagerFactory;
+        private readonly string _destinationPath;
 
         private readonly ManualResetEventSlim _serviceShutdownEvent;
         private readonly Task _fileProcessingRoutine;
@@ -30,13 +32,14 @@ namespace WindowsServices.Host
         public FileSystemMonitorService(
             FileSystemMonitorServiceConfiguration configuration,
             IFolderWatcherFactory folderWatcherFactory,
-            IFileOperationManager fileOperationManager,
+            JobManagerFactory jobManagerFactory,
             ILogger logger)
         {
             _logger = logger;
             _folderWatcherFactory = folderWatcherFactory;
             _folderWatcher = folderWatcherFactory.Create(configuration.FolderToMonitor);
-            _fileOperationManager = fileOperationManager;
+            _jobManagerFactory = jobManagerFactory;
+            _destinationPath = configuration.TargetFolder;
 
             _serviceShutdownEvent = new ManualResetEventSlim(false);
             _fileProcessingRoutine = new Task(this.RunServiceOperation, TaskCreationOptions.LongRunning);
@@ -132,12 +135,9 @@ namespace WindowsServices.Host
 
         private void ProcessOperations(IList<FileSystemWatcherEventArgs> operations)
         {
-            foreach (FileSystemWatcherEventArgs operation in operations)
-            {
-                _logger.Trace("[Start]: Operation processing - {0}", operation);
+            var jobManager = _jobManagerFactory.Create(_destinationPath);
 
-                _logger.Trace("[End]: Operation processing - {0}", operation);
-            }
+            jobManager.Process(operations);
         }
 
         protected override void Dispose(bool disposing)

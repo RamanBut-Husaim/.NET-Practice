@@ -1,4 +1,5 @@
 ﻿using WindowsServices.Core.FileOperations;
+using WindowsServices.Core.Jobs;
 using WindowsServices.Core.Watching;
 using WindowsServices.FileWatching;
 using LightInject;
@@ -18,7 +19,7 @@ namespace WindowsServices.Host.Configuration
                     new FileSystemMonitorService(
                         configuration,
                         factory.GetInstance<IFolderWatcherFactory>(CompositionRoot.LoggingFolderWatcherFactory),
-                        factory.GetInstance<IFileOperationManager>(),
+                        factory.GetInstance<JobManagerFactory>(),
                         factory.GetInstance<ILogger>()));
 
             serviceRegistry.RegisterInstance<ILogger>(LogManager.GetLogger("Application Logger"));
@@ -40,7 +41,14 @@ namespace WindowsServices.Host.Configuration
                     new PollingRenameOperation(new RenameOperation(oldPath, newPath), factory.GetInstance<IPollingManager>()),
                     factory.GetInstance<ILogger>())));
             serviceRegistry.Register<OperationFactory>(new PerContainerLifetime());
-            serviceRegistry.Register<IFileOperationManager, FileOperationManager>();
+
+            serviceRegistry.Register<string, IFileOperationManager>(
+                ((factory, destinationPath) => new FileOperationManager(factory.GetInstance<OperationFactory>(), destinationPath)));
+            serviceRegistry.Register<FileOperationManagerFactory>(new PerContainerLifetime());
+
+            serviceRegistry.Register<string, IJobManager>((factory, destinationpath) =>
+                new JobManager(destinationpath, factory.GetInstance<FileOperationManagerFactory>(), factory.GetInstance<ILogger>()));
+            serviceRegistry.Register<JobManagerFactory>(new PerContainerLifetime());
         }
     }
 }

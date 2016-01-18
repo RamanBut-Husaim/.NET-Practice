@@ -28,8 +28,6 @@ namespace WindowsServices.Core.FileOperations
 
         public async Task Perform()
         {
-            File.Move(_oldPath, _newPath);
-
             using (var sourceStream = new FileStream(_oldPath, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous | FileOptions.DeleteOnClose))
             {
                 using (var destinationStream = new FileStream(_newPath, FileMode.Create, FileAccess.Write, FileShare.None, DefaultBufferSize, FileOptions.Asynchronous))

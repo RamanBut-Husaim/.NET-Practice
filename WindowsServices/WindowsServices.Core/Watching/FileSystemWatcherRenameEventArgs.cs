@@ -19,7 +19,7 @@
 
         public override string ToString()
         {
-            return string.Format("File renamed from '{0}' to '{1}'", this.Name, this.OldName);
+            return string.Format("File renamed from '{0}' to '{1}'", this.OldName, this.Name);
         }
     }
 }

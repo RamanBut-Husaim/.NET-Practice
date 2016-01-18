@@ -1,4 +1,4 @@
-﻿using WindowsServices.Core;
+﻿using WindowsServices.Core.FileOperations;
 using WindowsServices.Core.Watching;
 using WindowsServices.FileWatching;
 using LightInject;
@@ -18,6 +18,7 @@ namespace WindowsServices.Host.Configuration
                     new FileSystemMonitorService(
                         configuration,
                         factory.GetInstance<IFolderWatcherFactory>(CompositionRoot.LoggingFolderWatcherFactory),
+                        factory.GetInstance<IFileOperationManager>(),
                         factory.GetInstance<ILogger>()));
 
             serviceRegistry.RegisterInstance<ILogger>(LogManager.GetLogger("Application Logger"));
@@ -26,6 +27,20 @@ namespace WindowsServices.Host.Configuration
             serviceRegistry.Register<string, IFolderWatcher>((factory, path) => new FolderWatcher(path));
             serviceRegistry.Register<IFolderWatcherFactory, LoggingFolderWatcherFactory>(CompositionRoot.LoggingFolderWatcherFactory);
             serviceRegistry.Register<IFolderWatcherFactory, FolderWatcherFactory>(new PerContainerLifetime());
+
+            serviceRegistry.Register<PollingManagerFactory>(new PerContainerLifetime());
+            serviceRegistry.Register<IPollingManager>(factory => factory.GetInstance<PollingManagerFactory>().Create(), new PerContainerLifetime());
+
+            serviceRegistry.Register<string, string, ICopyOperation>((factory, sourcePath, destinationPath) =>
+                new LoggingPollingCopyOperation(
+                    new PollingCopyOperation(new CopyOperation(sourcePath, destinationPath), factory.GetInstance<IPollingManager>()),
+                    factory.GetInstance<ILogger>()));
+            serviceRegistry.Register<string, string, IRenameOperation>(
+                ((factory, oldPath, newPath) => new LoggingPollingRenameOperation(
+                    new PollingRenameOperation(new RenameOperation(oldPath, newPath), factory.GetInstance<IPollingManager>()),
+                    factory.GetInstance<ILogger>())));
+            serviceRegistry.Register<OperationFactory>(new PerContainerLifetime());
+            serviceRegistry.Register<IFileOperationManager, FileOperationManager>();
         }
     }
 }

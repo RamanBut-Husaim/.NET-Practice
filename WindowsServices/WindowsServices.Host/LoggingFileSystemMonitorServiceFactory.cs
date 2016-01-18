@@ -15,9 +15,9 @@ namespace WindowsServices.Host
 
         public FileSystemMonitorService Create(FileSystemMonitorServiceConfiguration configuration)
         {
-            _logger.Log(LogLevel.Trace, "Start: File system monitor service creation");
+            _logger.Log(LogLevel.Trace, "[Start]: File system monitor service creation");
             var fileSystemMonitorService = _fileSystemMonitorServiceFactory.Create(configuration);
-            _logger.Log(LogLevel.Trace, "End: File system monitor service creation");
+            _logger.Log(LogLevel.Trace, "[End]: File system monitor service creation");
 
             return fileSystemMonitorService;
         }

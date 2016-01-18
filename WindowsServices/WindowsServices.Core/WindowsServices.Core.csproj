@@ -55,6 +55,7 @@
     <Compile Include="FileOperations\OperationFactory.cs" />
     <Compile Include="FileOperations\PollingCopyOperation.cs" />
     <Compile Include="FileOperations\PollingManager.cs" />
+    <Compile Include="FileOperations\PollingManagerFactory.cs" />
     <Compile Include="FileOperations\PollingRenameOperation.cs" />
     <Compile Include="FileOperations\RenameOperation.cs" />
     <Compile Include="Watching\FolderWatcherFactory.cs" />

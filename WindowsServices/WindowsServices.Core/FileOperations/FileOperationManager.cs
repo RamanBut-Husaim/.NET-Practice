@@ -4,13 +4,11 @@ namespace WindowsServices.Core.FileOperations
 {
     public sealed class FileOperationManager : IFileOperationManager
     {
-        private readonly string _sourcePath;
-        private readonly string _destinationPath;
+        private readonly OperationFactory _operationFactory;
 
-        public FileOperationManager(string sourcePath, string destinationPath)
+        public FileOperationManager(OperationFactory operationFactory)
         {
-            _sourcePath = sourcePath;
-            _destinationPath = destinationPath;
+            _operationFactory = operationFactory;
         }
 
 

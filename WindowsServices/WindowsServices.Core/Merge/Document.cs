@@ -8,11 +8,13 @@ namespace WindowsServices.Core.Merge
     {
         private readonly DocumentInfo _documentInfo;
         private readonly HashSet<DocumentPart> _parts;
+        private readonly HashSet<int> _partNumbers;
 
         public Document(DocumentInfo documentInfo)
         {
             _documentInfo = documentInfo;
             _parts = new HashSet<DocumentPart>();
+            _partNumbers = new HashSet<int>();
         }
 
         public DocumentInfo Info
@@ -25,13 +27,32 @@ namespace WindowsServices.Core.Merge
             return _parts.Contains(part);
         }
 
-        public bool Add(DocumentPart part)
+        public bool IsComplete()
+        {
+            if (_partNumbers.Count == 0)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < _partNumbers.Count; ++i)
+            {
+                if (!_partNumbers.Contains(i))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool AddPart(DocumentPart part)
         {
             bool result = false;
 
             if (!this.Contains(part))
             {
                 _parts.Add(part);
+                _partNumbers.Add(part.Number);
                 result = true;
             }
 

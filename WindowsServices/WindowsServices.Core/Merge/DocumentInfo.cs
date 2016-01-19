@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WindowsServices.Core.Merge
 {
@@ -44,12 +40,17 @@ namespace WindowsServices.Core.Merge
 
         public bool Equals(DocumentInfo other)
         {
-            throw new NotImplementedException();
+            return this.Name.Equals(other.Name) && this.Type.Equals(other.Type);
         }
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            int hashCode = 31;
+
+            hashCode += 17 * hashCode ^ this.Name.GetHashCode();
+            hashCode += 17 * hashCode ^ this.Type.GetHashCode();
+
+            return hashCode;
         }
     }
 }

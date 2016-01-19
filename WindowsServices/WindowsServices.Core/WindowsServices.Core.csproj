@@ -64,6 +64,10 @@
     <Compile Include="FileOperations\Synchronization\LoggingPollingSynchronizationOperation.cs" />
     <Compile Include="FileOperations\Synchronization\PollingSynchronizationOperation.cs" />
     <Compile Include="FileOperations\Synchronization\SynchronizationOperation.cs" />
+    <Compile Include="Merge\Document.cs" />
+    <Compile Include="Merge\DocumentInfo.cs" />
+    <Compile Include="Merge\DocumentPart.cs" />
+    <Compile Include="Merge\MergeManager.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\FileServiceFactory.cs" />
     <Compile Include="Services\ISynchronizationService.cs" />

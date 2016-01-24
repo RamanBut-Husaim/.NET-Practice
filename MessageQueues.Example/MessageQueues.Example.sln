@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Task.txt = Task.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageQueues.HarvesterHost.Core", "MessageQueues.HarvesterHost.Core\MessageQueues.HarvesterHost.Core.csproj", "{BF0ECF64-956E-460A-A33F-21EF351AAB61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageQueues.CentralHost.Core", "MessageQueues.CentralHost.Core\MessageQueues.CentralHost.Core.csproj", "{DA69AC6D-0EE9-4430-BB7F-DF2946A45869}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{2F0DFB14-DC8F-43F8-A77A-5ADD1E64BA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F0DFB14-DC8F-43F8-A77A-5ADD1E64BA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F0DFB14-DC8F-43F8-A77A-5ADD1E64BA7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF0ECF64-956E-460A-A33F-21EF351AAB61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0ECF64-956E-460A-A33F-21EF351AAB61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0ECF64-956E-460A-A33F-21EF351AAB61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0ECF64-956E-460A-A33F-21EF351AAB61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA69AC6D-0EE9-4430-BB7F-DF2946A45869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA69AC6D-0EE9-4430-BB7F-DF2946A45869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA69AC6D-0EE9-4430-BB7F-DF2946A45869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA69AC6D-0EE9-4430-BB7F-DF2946A45869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

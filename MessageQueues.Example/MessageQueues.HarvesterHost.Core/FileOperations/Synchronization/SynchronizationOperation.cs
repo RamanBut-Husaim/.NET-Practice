@@ -18,17 +18,12 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
             get { return _copyOperation.SourcePath; }
         }
 
-        public string DestinationPath
-        {
-            get { return _copyOperation.DestinationPath; }
-        }
-
         public async Task Perform()
         {
-            if (!File.Exists(this.DestinationPath))
-            {
-                await _copyOperation.Perform();
-            }
+            //if (!File.Exists(this.DestinationPath))
+            //{
+            //    await _copyOperation.Perform();
+            //}
         }
     }
 }

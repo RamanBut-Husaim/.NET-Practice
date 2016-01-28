@@ -89,6 +89,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MessageQueues.Core\MessageQueues.Core.csproj">
+      <Project>{f5535615-3694-4bbb-8a61-03aa40bfce0f}</Project>
+      <Name>MessageQueues.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

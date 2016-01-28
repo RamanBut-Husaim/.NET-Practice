@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MessageQueues.Core;
 using MessageQueues.HarvesterHost.Core.Watching;
+using RabbitMQ.Client;
 
 namespace MessageQueues.HarvesterHost.Core.FileOperations
 {
     public sealed class FileOperationManager : IFileOperationManager
     {
         private readonly OperationFactory _operationFactory;
-        private readonly string _destinationPath;
+        private readonly ITransferManager _transferManager;
 
-        public FileOperationManager(OperationFactory operationFactory, string destinationPath)
+        public FileOperationManager(OperationFactory operationFactory, ITransferManager transferManager)
         {
             _operationFactory = operationFactory;
-            _destinationPath = destinationPath;
+            _transferManager = transferManager;
         }
 
         public async Task ProcessFileOperations(OperationBatch operationBatch)
@@ -24,7 +26,7 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
 
             for (int i = 0; i < fileOperations.Count; ++i)
             {
-                IOperation operation = _operationFactory.Create(fileOperations[i], _destinationPath);
+                IOperation operation = _operationFactory.Create(fileOperations[i], "replace");
                 await operation.Perform();
             }
         }

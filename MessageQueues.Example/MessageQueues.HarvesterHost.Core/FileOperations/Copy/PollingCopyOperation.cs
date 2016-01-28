@@ -19,11 +19,6 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
             get { return _copyOperation.SourcePath; }
         }
 
-        public string DestinationPath
-        {
-            get { return _copyOperation.DestinationPath; }
-        }
-
         public async Task Perform()
         {
             await _pollingManager.Perform<DirectoryNotFoundException>(() => _copyOperation.Perform());

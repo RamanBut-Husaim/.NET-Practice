@@ -21,11 +21,6 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
             get { return _synchronizationOperation.SourcePath; }
         }
 
-        public string DestinationPath
-        {
-            get { return _synchronizationOperation.DestinationPath; }
-        }
-
         public async Task Perform()
         {
             _logger.Trace("[Start]: Synchronization operation '{0}'", this.SourcePath);

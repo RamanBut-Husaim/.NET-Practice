@@ -4,16 +4,16 @@ namespace MessageQueues.HarvesterHost.Core.Services
 {
     public sealed class SynchronizationServiceFactory
     {
-        private readonly Func<string, string, ISynchronizationService> _factory;
+        private readonly Func<string, ISynchronizationService> _factory;
 
-        public SynchronizationServiceFactory(Func<string, string, ISynchronizationService> factory)
+        public SynchronizationServiceFactory(Func<string, ISynchronizationService> factory)
         {
             _factory = factory;
         }
 
-        public ISynchronizationService Create(string sourcePath, string destinationPath)
+        public ISynchronizationService Create(string sourcePath)
         {
-            return _factory.Invoke(sourcePath, destinationPath);
+            return _factory.Invoke(sourcePath);
         }
     }
 }

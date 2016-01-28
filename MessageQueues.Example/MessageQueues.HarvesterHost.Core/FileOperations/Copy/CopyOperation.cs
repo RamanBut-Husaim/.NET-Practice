@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using MessageQueues.Core;
 
 namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
 {
@@ -8,12 +9,12 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
         private const int DefaultBufferSize = 1024;
 
         private readonly string _sourcePath;
-        private readonly string _destinationPath;
+        private readonly ITransferManager _transferManager;
 
-        public CopyOperation(string sourcePath, string destinationPath)
+        public CopyOperation(string sourcePath, ITransferManager transferManager)
         {
             _sourcePath = sourcePath;
-            _destinationPath = destinationPath;
+            _transferManager = transferManager;
         }
 
         public string SourcePath
@@ -21,19 +22,15 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
             get { return _sourcePath; }
         }
 
-        public string DestinationPath
-        {
-            get { return _destinationPath; }
-        }
-
         public async Task Perform()
         {
-            using (var sourceStream = new FileStream(_sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous))
+            using (
+                var sourceStream = new FileStream(_sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                    DefaultBufferSize, FileOptions.Asynchronous))
             {
-                using (var destinationStream = new FileStream(_destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, DefaultBufferSize, FileOptions.Asynchronous))
-                {
-                    await sourceStream.CopyToAsync(destinationStream);
-                }
+                byte[] fileContent = new byte[sourceStream.Length];
+                await sourceStream.ReadAsync(fileContent, 0, fileContent.Length);
+
             }
         }
     }

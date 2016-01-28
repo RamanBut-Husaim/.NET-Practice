@@ -3,7 +3,5 @@
     public interface ISynchronizationOperation : IOperation
     {
         string SourcePath { get; }
-
-        string DestinationPath { get; }
     }
 }

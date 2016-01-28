@@ -19,16 +19,11 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
             get { return _copyOperation.SourcePath; }
         }
 
-        public string DestinationPath
-        {
-            get { return _copyOperation.DestinationPath; }
-        }
-
         public async Task Perform()
         {
-            _logger.Trace("[Start]: Copy file from '{0}' to '{1}'", _copyOperation.SourcePath, _copyOperation.DestinationPath);
+            _logger.Trace("[Start]: Copy file from '{0}'", _copyOperation.SourcePath);
             await _copyOperation.Perform();
-            _logger.Trace("[End]: Copy file from '{0}' to '{1}'", _copyOperation.SourcePath, _copyOperation.DestinationPath);
+            _logger.Trace("[End]: Copy file from '{0}'", _copyOperation.SourcePath);
         }
     }
 }

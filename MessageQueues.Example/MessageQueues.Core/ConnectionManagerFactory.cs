@@ -6,7 +6,7 @@ namespace MessageQueues.Core
     {
         public IConnectionManager Create()
         {
-            return new ConnectionManager();
+            return new ConnectionManager("localhost");
         }
 
         public void Release(IConnectionManager connectionManager)

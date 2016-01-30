@@ -48,7 +48,10 @@
     <Compile Include="ConnectionManagerFactory.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="ITransferManager.cs" />
+    <Compile Include="Messages\FileMessage.cs" />
+    <Compile Include="Messages\OperationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queues.cs" />
     <Compile Include="TransferableModel.cs" />
     <Compile Include="TransferManager.cs" />
   </ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using MessageQueues.HarvesterHost.Core.FileOperations.Copy;
 using MessageQueues.HarvesterHost.Core.FileOperations.Rename;
 using MessageQueues.HarvesterHost.Core.FileOperations.Synchronization;
@@ -9,21 +8,21 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
 {
     public sealed class OperationFactory
     {
-        private readonly Func<string, string, IRenameOperation> _renameOperationFactory;
-        private readonly Func<string, string, ICopyOperation> _copyOperationFactory;
-        private readonly Func<string, string, ISynchronizationOperation> _synchronizationOperationFactory;
+        private readonly Func<string, string, IFileSender, IRenameOperation> _renameOperationFactory;
+        private readonly Func<string, IFileSender, ICopyOperation> _copyOperationFactory;
+        private readonly Func<string, IFileSender, ISynchronizationOperation> _synchronizationOperationFactory;
 
         public OperationFactory(
-            Func<string ,string, IRenameOperation> renameOperationFactory,
-            Func<string ,string, ICopyOperation> copyOperationFactory,
-            Func<string, string, ISynchronizationOperation> synchronizationOperationFactory)
+            Func<string ,string, IFileSender, IRenameOperation> renameOperationFactory,
+            Func<string , IFileSender, ICopyOperation> copyOperationFactory,
+            Func<string, IFileSender, ISynchronizationOperation> synchronizationOperationFactory)
         {
             _renameOperationFactory = renameOperationFactory;
             _copyOperationFactory = copyOperationFactory;
             _synchronizationOperationFactory = synchronizationOperationFactory;
         }
 
-        public IOperation Create(FileSystemWatcherEventArgs eventArgs, string destinationPath)
+        public IOperation Create(FileSystemWatcherEventArgs eventArgs, IFileSender fileSender)
         {
             IOperation result;
 
@@ -31,17 +30,17 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
             {
                 case FileSystemWatcherChangeType.Renamed:
                 {
-                    result = this.CreateRenameOperation(eventArgs, destinationPath);
+                    result = this.CreateRenameOperation(eventArgs, fileSender);
                     break;
                 }
                 case FileSystemWatcherChangeType.Synchronize:
                 {
-                    result = this.CreateSynchronizeOperation(eventArgs, destinationPath);
+                    result = this.CreateSynchronizeOperation(eventArgs, fileSender);
                     break;
                 }
                 default:
                 {
-                    result = this.CreateCopyOperation(eventArgs, destinationPath);
+                    result = this.CreateCopyOperation(eventArgs, fileSender);
                     break;
                 }
             }
@@ -49,7 +48,7 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
             return result;
         }
 
-        private IOperation CreateRenameOperation(FileSystemWatcherEventArgs eventArgs, string destinationPath)
+        private IOperation CreateRenameOperation(FileSystemWatcherEventArgs eventArgs, IFileSender fileSender)
         {
             var renameArgs = eventArgs as FileSystemWatcherRenameEventArgs;
             if (renameArgs == null)
@@ -57,21 +56,17 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
                 throw new ArgumentException("The operation is specified as 'Rename' but the actual arguments is different.");
             }
 
-            string oldFullPath = Path.Combine(destinationPath, renameArgs.OldName);
-            string newFullPath = Path.Combine(destinationPath, renameArgs.Name);
-            return _renameOperationFactory.Invoke(oldFullPath, newFullPath);
+            return _renameOperationFactory.Invoke(renameArgs.OldName, renameArgs.Name, fileSender);
         }
 
-        private IOperation CreateCopyOperation(FileSystemWatcherEventArgs eventArgs, string destinationPath)
+        private IOperation CreateCopyOperation(FileSystemWatcherEventArgs eventArgs, IFileSender fileSender)
         {
-            string destinationFullPath = Path.Combine(destinationPath, eventArgs.Name);
-            return _copyOperationFactory.Invoke(eventArgs.FullPath, destinationFullPath);
+            return _copyOperationFactory.Invoke(eventArgs.FullPath, fileSender);
         }
 
-        private IOperation CreateSynchronizeOperation(FileSystemWatcherEventArgs eventArgs, string destinationPath)
+        private IOperation CreateSynchronizeOperation(FileSystemWatcherEventArgs eventArgs, IFileSender fileSender)
         {
-            string destinationFullPath = Path.Combine(destinationPath, eventArgs.Name);
-            return _synchronizationOperationFactory.Invoke(eventArgs.FullPath, destinationFullPath);
+            return _synchronizationOperationFactory.Invoke(eventArgs.FullPath, fileSender);
         }
     }
 }

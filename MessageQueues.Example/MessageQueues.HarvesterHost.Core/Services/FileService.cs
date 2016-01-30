@@ -10,18 +10,15 @@ namespace MessageQueues.HarvesterHost.Core.Services
 {
     public sealed class FileService : IFileService
     {
-        private readonly FileOperationManagerFactory _fileOperationManagerFactory;
+        private readonly Func<IFileOperationManager> _fileOperationManagerFactory;
         private readonly ILogger _logger;
-        private readonly string _destinationPath;
 
         public FileService(
-            string destinationPath,
-            FileOperationManagerFactory fileOperationManagerFactory,
+            Func<IFileOperationManager> fileOperationManagerFactory,
             ILogger logger)
         {
             _fileOperationManagerFactory = fileOperationManagerFactory;
             _logger = logger;
-            _destinationPath = destinationPath;
         }
 
         public void Process(IEnumerable<FileSystemWatcherEventArgs> watchArgs)
@@ -36,7 +33,7 @@ namespace MessageQueues.HarvesterHost.Core.Services
             {
                 _logger.Trace("[Start]: File processing {0}", fileModifications.Key);
                 var operationBatch = new OperationBatch(fileModifications.Key, fileModifications.ToList());
-                IFileOperationManager operationManager = _fileOperationManagerFactory.Create(_destinationPath);
+                IFileOperationManager operationManager = _fileOperationManagerFactory.Invoke();
                 Task task = operationManager.ProcessFileOperations(operationBatch);
                 jobs.Add(task);
             }

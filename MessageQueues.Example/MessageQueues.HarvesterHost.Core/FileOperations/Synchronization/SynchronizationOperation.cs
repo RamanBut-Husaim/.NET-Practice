@@ -1,29 +1,42 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using MessageQueues.HarvesterHost.Core.FileOperations.Copy;
+using MessageQueues.Core.Messages;
 
 namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
 {
     public sealed class SynchronizationOperation : ISynchronizationOperation
     {
-        private readonly ICopyOperation _copyOperation;
+        private const int DefaultBufferSize = 1024;
 
-        public SynchronizationOperation(ICopyOperation copyOperation)
+        private readonly string _sourcePath;
+        private readonly IFileSender _fileSender;
+
+        public SynchronizationOperation(string sourcePath, IFileSender fileSender)
         {
-            _copyOperation = copyOperation;
+            _sourcePath = sourcePath;
+            _fileSender = fileSender;
         }
 
         public string SourcePath
         {
-            get { return _copyOperation.SourcePath; }
+            get { return _sourcePath; }
         }
 
         public async Task Perform()
         {
-            //if (!File.Exists(this.DestinationPath))
-            //{
-            //    await _copyOperation.Perform();
-            //}
+            using (var sourceStream = new FileStream(_sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous))
+            {
+                byte[] fileContent = new byte[sourceStream.Length];
+                await sourceStream.ReadAsync(fileContent, 0, fileContent.Length);
+                var message = new FileMessage
+                {
+                    FileContent = fileContent,
+                    FileName = Path.GetFileName(this.SourcePath),
+                    OperationType = OperationType.Synchronize
+                };
+
+                _fileSender.Send(message);
+            }
         }
     }
 }

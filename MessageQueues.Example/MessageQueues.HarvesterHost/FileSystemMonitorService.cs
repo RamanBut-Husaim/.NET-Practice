@@ -19,7 +19,7 @@ namespace MessageQueues.HarvesterHost
         private readonly ILogger _logger;
         private readonly IFolderWatcherFactory _folderWatcherFactory;
         private readonly IFolderWatcher _folderWatcher;
-        private readonly FileServiceFactory _fileServiceFactory;
+        private readonly Func<IFileService> _fileServiceFactory;
         private readonly SynchronizationServiceFactory _synchronizationServiceFactory;
         private readonly FileSystemMonitorServiceConfiguration _configuration;
 
@@ -32,7 +32,7 @@ namespace MessageQueues.HarvesterHost
         public FileSystemMonitorService(
             FileSystemMonitorServiceConfiguration configuration,
             IFolderWatcherFactory folderWatcherFactory,
-            FileServiceFactory fileServiceFactory,
+            Func<IFileService> fileServiceFactory,
             SynchronizationServiceFactory synchronizationServiceFactory,
             ILogger logger)
         {
@@ -139,15 +139,15 @@ namespace MessageQueues.HarvesterHost
 
         private void PerformSynchronization()
         {
-            ISynchronizationService synchronizationService = _synchronizationServiceFactory.Create(
-                _configuration.FolderToMonitor);
+            //ISynchronizationService synchronizationService = _synchronizationServiceFactory.Create(
+            //    _configuration.FolderToMonitor);
 
-            synchronizationService.PerformSynchronization().Wait();
+            //synchronizationService.PerformSynchronization().Wait();
         }
 
         private void ProcessOperations(IList<FileSystemWatcherEventArgs> operations)
         {
-            IFileService fileService = _fileServiceFactory.Create("replace");
+            IFileService fileService = _fileServiceFactory.Invoke();
 
             fileService.Process(operations);
         }

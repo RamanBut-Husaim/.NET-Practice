@@ -11,12 +11,12 @@ namespace MessageQueues.HarvesterHost.Core.Services
     public sealed class SynchronizationService : ISynchronizationService
     {
         private readonly string _sourcePath;
-        private readonly FileOperationManagerFactory _fileOperationManagerFactory;
+        private readonly Func<IFileOperationManager> _fileOperationManagerFactory;
         private readonly ILogger _logger;
 
         public SynchronizationService(
             string sourcePath,
-            FileOperationManagerFactory fileOperationManagerFactory,
+            Func<IFileOperationManager> fileOperationManagerFactory,
             ILogger logger)
         {
             _sourcePath = sourcePath;
@@ -30,7 +30,7 @@ namespace MessageQueues.HarvesterHost.Core.Services
             {
                 _logger.Trace("[Start]: Synchronization '{0}'", file);
                 FileSystemWatcherEventArgs args = this.CreateArgs(file);
-                IFileOperationManager fileOperationManager = _fileOperationManagerFactory.Create("REPLACE");
+                IFileOperationManager fileOperationManager = _fileOperationManagerFactory.Invoke();
                 var operationBatch = new OperationBatch(file, new List<FileSystemWatcherEventArgs> {args});
 
                 try

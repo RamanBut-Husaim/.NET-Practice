@@ -1,19 +1,19 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MessageQueues.Core.Messages;
 
 namespace MessageQueues.HarvesterHost.Core.FileOperations.Rename
 {
     public sealed class RenameOperation : IRenameOperation
     {
-        private const int DefaultBufferSize = 1024;
-
         private readonly string _oldPath;
         private readonly string _newPath;
+        private readonly IFileSender _fileSender;
 
-        public RenameOperation(string oldPath, string newPath)
+        public RenameOperation(string oldPath, string newPath, IFileSender fileSender)
         {
             _oldPath = oldPath;
             _newPath = newPath;
+            _fileSender = fileSender;
         }
 
         public string OldPath
@@ -28,13 +28,14 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Rename
 
         public async Task Perform()
         {
-            using (var sourceStream = new FileStream(_oldPath, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous | FileOptions.DeleteOnClose))
+            var fileMessage = new FileMessage
             {
-                using (var destinationStream = new FileStream(_newPath, FileMode.Create, FileAccess.Write, FileShare.None, DefaultBufferSize, FileOptions.Asynchronous))
-                {
-                    await sourceStream.CopyToAsync(destinationStream);
-                }
-            }
+                FileName = this.OldPath,
+                NewName = this.NewPath,
+                OperationType = OperationType.Renamed
+            };
+
+            _fileSender.Send(fileMessage);
         }
     }
 }

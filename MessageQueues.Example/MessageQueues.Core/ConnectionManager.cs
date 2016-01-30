@@ -11,11 +11,11 @@ namespace MessageQueues.Core
         private IConnection _connection;
         private bool _disposed;
 
-        public ConnectionManager()
+        public ConnectionManager(string hostName)
         {
             _connectionFactory = new ConnectionFactory()
             {
-                HostName = "localhost"
+                HostName = hostName
             };
 
             _connection = null;
@@ -25,11 +25,14 @@ namespace MessageQueues.Core
         {
             get
             {
-                lock (_sync)
+                if (_connection == null)
                 {
-                    if (_connection == null)
+                    lock (_sync)
                     {
-                        _connection = _connectionFactory.CreateConnection();
+                        if (_connection == null)
+                        {
+                            _connection = _connectionFactory.CreateConnection();
+                        }
                     }
                 }
 

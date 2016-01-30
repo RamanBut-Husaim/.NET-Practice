@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Framing;
 
 namespace MessageQueues.Core
 {
-    public sealed class TransferManager
+    public sealed class TransferManager : ITransferManager
     {
         private readonly string _queueName;
         private readonly IModel _channel;
@@ -21,6 +16,7 @@ namespace MessageQueues.Core
             _queueName = queueName;
             _channel = channel;
             _binaryFormatter = new BinaryFormatter();
+            this.DeclareQueue();
         }
 
         public void Send<T>(T obj) where T : TransferableModel
@@ -42,6 +38,11 @@ namespace MessageQueues.Core
             basicProperties.Persistent = true;
 
             _channel.BasicPublish("", _queueName, basicProperties, objectBytes);
+        }
+
+        private void DeclareQueue()
+        {
+            _channel.QueueDeclare(_queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
         }
     }
 }

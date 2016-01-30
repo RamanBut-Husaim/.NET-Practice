@@ -84,6 +84,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MessageQueues.Core\MessageQueues.Core.csproj">
+      <Project>{f5535615-3694-4bbb-8a61-03aa40bfce0f}</Project>
+      <Name>MessageQueues.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MessageQueues.HarvesterHost.Core\MessageQueues.HarvesterHost.Core.csproj">
       <Project>{bf0ecf64-956e-460a-a33f-21ef351aab61}</Project>
       <Name>MessageQueues.HarvesterHost.Core</Name>

@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+
 using NLog;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations.Rename
+namespace MessageQueues.Core.Operations.Rename
 {
     public sealed class LoggingPollingRenameOperation : IRenameOperation
     {

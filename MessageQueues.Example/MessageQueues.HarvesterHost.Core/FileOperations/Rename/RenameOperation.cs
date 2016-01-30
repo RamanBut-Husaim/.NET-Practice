@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+
 using MessageQueues.Core.Messages;
+using MessageQueues.Core.Operations.Rename;
 
 namespace MessageQueues.HarvesterHost.Core.FileOperations.Rename
 {

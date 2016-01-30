@@ -49,27 +49,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileOperations\Copy\CopyOperation.cs" />
-    <Compile Include="FileOperations\Copy\ICopyOperation.cs" />
-    <Compile Include="FileOperations\Copy\LoggingPollingCopyOperation.cs" />
-    <Compile Include="FileOperations\Copy\PollingCopyOperation.cs" />
     <Compile Include="FileOperations\FileOperationManager.cs" />
     <Compile Include="FileOperations\FileSender.cs" />
     <Compile Include="FileOperations\FileSenderFactory.cs" />
     <Compile Include="FileOperations\IFileOperationManager.cs" />
     <Compile Include="FileOperations\IFileSender.cs" />
-    <Compile Include="FileOperations\IOperation.cs" />
-    <Compile Include="FileOperations\IPollingManager.cs" />
     <Compile Include="FileOperations\OperationBatch.cs" />
     <Compile Include="FileOperations\OperationFactory.cs" />
-    <Compile Include="FileOperations\PollingManager.cs" />
-    <Compile Include="FileOperations\PollingManagerFactory.cs" />
-    <Compile Include="FileOperations\Rename\IRenameOperation.cs" />
-    <Compile Include="FileOperations\Rename\LoggingPollingRenameOperation.cs" />
-    <Compile Include="FileOperations\Rename\PollingRenameOperation.cs" />
     <Compile Include="FileOperations\Rename\RenameOperation.cs" />
-    <Compile Include="FileOperations\Synchronization\ISynchronizationOperation.cs" />
-    <Compile Include="FileOperations\Synchronization\LoggingPollingSynchronizationOperation.cs" />
-    <Compile Include="FileOperations\Synchronization\PollingSynchronizationOperation.cs" />
     <Compile Include="FileOperations\Synchronization\SynchronizationOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileService.cs" />

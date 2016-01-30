@@ -1,4 +1,4 @@
-﻿namespace MessageQueues.HarvesterHost.Core.FileOperations.Rename
+﻿namespace MessageQueues.Core.Operations.Rename
 {
     public interface IRenameOperation : IOperation
     {

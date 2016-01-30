@@ -48,11 +48,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileBatchManager.cs" />
+    <Compile Include="FileMessageDispatcher.cs" />
+    <Compile Include="FileMessageListenerService.cs" />
+    <Compile Include="FileOperations\Copy\CopyOperation.cs" />
+    <Compile Include="FileOperations\FileOperationProcessor.cs" />
+    <Compile Include="FileOperations\OperationFactory.cs" />
+    <Compile Include="FileOperations\Rename\RenameOperation.cs" />
+    <Compile Include="FileOperations\Synchronization\SynchronizationOperation.cs" />
+    <Compile Include="HarvesterProcessingDispatcher.cs" />
+    <Compile Include="HarvesterProcessingDispatcherFactory.cs" />
+    <Compile Include="IFileBatchManager.cs" />
+    <Compile Include="FileOperations\IFileOperationProcessor.cs" />
+    <Compile Include="IFileMessageDispatcher.cs" />
+    <Compile Include="IHarvesterProcessingDispatcher.cs" />
+    <Compile Include="OperationBatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MessageQueues.Core\MessageQueues.Core.csproj">
+      <Project>{f5535615-3694-4bbb-8a61-03aa40bfce0f}</Project>
+      <Name>MessageQueues.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

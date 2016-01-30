@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+
 using NLog;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
+namespace MessageQueues.Core.Operations.Synchronization
 {
     public sealed class LoggingPollingSynchronizationOperation : ISynchronizationOperation
     {
@@ -16,16 +17,16 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
             _logger = logger;
         }
 
-        public string SourcePath
+        public string Path
         {
-            get { return _synchronizationOperation.SourcePath; }
+            get { return _synchronizationOperation.Path; }
         }
 
         public async Task Perform()
         {
-            _logger.Trace("[Start]: Synchronization operation '{0}'", this.SourcePath);
+            _logger.Trace("[Start]: Synchronization operation '{0}'", this.Path);
             await _synchronizationOperation.Perform();
-            _logger.Trace("[End]: Synchronization operation '{0}'", this.SourcePath);
+            _logger.Trace("[End]: Synchronization operation '{0}'", this.Path);
         }
     }
 }

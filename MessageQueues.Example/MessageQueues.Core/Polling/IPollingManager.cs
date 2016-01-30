@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations
+namespace MessageQueues.Core.Polling
 {
     public interface IPollingManager
     {

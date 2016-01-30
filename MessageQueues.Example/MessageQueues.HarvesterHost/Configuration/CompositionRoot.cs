@@ -1,12 +1,20 @@
 ﻿using System;
+
 using LightInject;
+
 using MessageQueues.Core;
+using MessageQueues.Core.Operations;
+using MessageQueues.Core.Operations.Copy;
+using MessageQueues.Core.Operations.Rename;
+using MessageQueues.Core.Operations.Synchronization;
+using MessageQueues.Core.Polling;
 using MessageQueues.HarvesterHost.Core.FileOperations;
 using MessageQueues.HarvesterHost.Core.FileOperations.Copy;
 using MessageQueues.HarvesterHost.Core.FileOperations.Rename;
 using MessageQueues.HarvesterHost.Core.FileOperations.Synchronization;
 using MessageQueues.HarvesterHost.Core.Services;
 using MessageQueues.HarvesterHost.Core.Watching;
+
 using NLog;
 
 namespace MessageQueues.HarvesterHost.Configuration
@@ -70,6 +78,7 @@ namespace MessageQueues.HarvesterHost.Configuration
             serviceRegistry.Register<IFileOperationManager, FileOperationManager>();
             serviceRegistry.Register<FileSenderFactory>(new PerContainerLifetime());
             serviceRegistry.Register<ConnectionManagerFactory>(new PerContainerLifetime());
+            serviceRegistry.Register<SerializationAssistantFactory>(new PerContainerLifetime());
             serviceRegistry.Register<IConnectionManager>(factory => factory.GetInstance<ConnectionManagerFactory>().Create(), new PerContainerLifetime());
         }
     }

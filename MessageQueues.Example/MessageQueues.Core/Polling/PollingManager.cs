@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using NLog;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations
+namespace MessageQueues.Core.Polling
 {
     public sealed class PollingManager : IPollingManager
     {

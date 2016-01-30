@@ -1,4 +1,9 @@
 ﻿using System;
+
+using MessageQueues.Core.Operations;
+using MessageQueues.Core.Operations.Copy;
+using MessageQueues.Core.Operations.Rename;
+using MessageQueues.Core.Operations.Synchronization;
 using MessageQueues.HarvesterHost.Core.FileOperations.Copy;
 using MessageQueues.HarvesterHost.Core.FileOperations.Rename;
 using MessageQueues.HarvesterHost.Core.FileOperations.Synchronization;

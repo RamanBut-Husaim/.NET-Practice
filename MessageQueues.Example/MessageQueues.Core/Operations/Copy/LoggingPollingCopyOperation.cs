@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+
 using NLog;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
+namespace MessageQueues.Core.Operations.Copy
 {
     public sealed class LoggingPollingCopyOperation : ICopyOperation
     {
@@ -14,16 +15,16 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
             _logger = logger;
         }
 
-        public string SourcePath
+        public string Path
         {
-            get { return _copyOperation.SourcePath; }
+            get { return _copyOperation.Path; }
         }
 
         public async Task Perform()
         {
-            _logger.Trace("[Start]: Copy file from '{0}'", _copyOperation.SourcePath);
+            _logger.Trace("[Start]: Copy file '{0}'", _copyOperation.Path);
             await _copyOperation.Perform();
-            _logger.Trace("[End]: Copy file from '{0}'", _copyOperation.SourcePath);
+            _logger.Trace("[End]: Copy file '{0}'", _copyOperation.Path);
         }
     }
 }

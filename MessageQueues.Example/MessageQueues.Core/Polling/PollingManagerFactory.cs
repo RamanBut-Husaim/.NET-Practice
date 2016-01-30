@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations
+namespace MessageQueues.Core.Polling
 {
     public sealed class PollingManagerFactory
     {

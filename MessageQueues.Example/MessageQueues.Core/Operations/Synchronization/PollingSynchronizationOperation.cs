@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
+using MessageQueues.Core.Polling;
+
+namespace MessageQueues.Core.Operations.Synchronization
 {
     public sealed class PollingSynchronizationOperation : ISynchronizationOperation
     {
@@ -16,9 +18,9 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
             _pollingManager = pollingManager;
         }
 
-        public string SourcePath
+        public string Path
         {
-            get { return _synchronizationOperation.SourcePath; }
+            get { return _synchronizationOperation.Path; }
         }
 
         public async Task Perform()

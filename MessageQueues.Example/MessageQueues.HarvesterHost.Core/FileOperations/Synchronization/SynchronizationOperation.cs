@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using MessageQueues.Core.Messages;
+using MessageQueues.Core.Operations;
+using MessageQueues.Core.Operations.Synchronization;
 
 namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
 {
@@ -8,30 +10,30 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Synchronization
     {
         private const int DefaultBufferSize = 1024;
 
-        private readonly string _sourcePath;
+        private readonly string _path;
         private readonly IFileSender _fileSender;
 
-        public SynchronizationOperation(string sourcePath, IFileSender fileSender)
+        public SynchronizationOperation(string path, IFileSender fileSender)
         {
-            _sourcePath = sourcePath;
+            _path = path;
             _fileSender = fileSender;
         }
 
-        public string SourcePath
+        public string Path
         {
-            get { return _sourcePath; }
+            get { return _path; }
         }
 
         public async Task Perform()
         {
-            using (var sourceStream = new FileStream(_sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous))
+            using (var sourceStream = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.Asynchronous))
             {
                 byte[] fileContent = new byte[sourceStream.Length];
                 await sourceStream.ReadAsync(fileContent, 0, fileContent.Length);
                 var message = new FileMessage
                 {
                     FileContent = fileContent,
-                    FileName = Path.GetFileName(this.SourcePath),
+                    FileName = System.IO.Path.GetFileName(this.Path),
                     OperationType = OperationType.Synchronize
                 };
 

@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
+using MessageQueues.Core.Polling;
+
+namespace MessageQueues.Core.Operations.Copy
 {
     public sealed class PollingCopyOperation : ICopyOperation
     {
@@ -14,9 +16,9 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations.Copy
             _pollingManager = pollingManager;
         }
 
-        public string SourcePath
+        public string Path
         {
-            get { return _copyOperation.SourcePath; }
+            get { return _copyOperation.Path; }
         }
 
         public async Task Perform()

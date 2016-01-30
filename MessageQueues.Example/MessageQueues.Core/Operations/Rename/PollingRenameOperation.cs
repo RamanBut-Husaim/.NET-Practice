@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace MessageQueues.HarvesterHost.Core.FileOperations.Rename
+using MessageQueues.Core.Polling;
+
+namespace MessageQueues.Core.Operations.Rename
 {
     public sealed class PollingRenameOperation : IRenameOperation
     {

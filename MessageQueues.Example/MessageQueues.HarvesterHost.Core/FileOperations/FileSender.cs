@@ -6,10 +6,10 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
 {
     public sealed class FileSender : IFileSender
     {
-        private readonly ITransferManager _transferManager;
+        private readonly IFileTransferManager _transferManager;
         private readonly string _harvester;
 
-        public FileSender(ITransferManager transferManager, string harvester)
+        public FileSender(IFileTransferManager transferManager, string harvester)
         {
             _transferManager = transferManager;
             _harvester = harvester;

@@ -60,8 +60,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CentralHostService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CentralHostServiceConfiguration.cs" />
+    <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="Configuration\ApplicationArguments.cs" />
     <Compile Include="Configuration\ApplicationArgumentsConfiguration.cs" />
+    <Compile Include="Configuration\CompositionRoot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

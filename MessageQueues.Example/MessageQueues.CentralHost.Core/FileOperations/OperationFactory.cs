@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 
 using MessageQueues.Core.Messages;
@@ -20,12 +21,13 @@ namespace MessageQueues.CentralHost.Core.FileOperations
         public OperationFactory(
             Func<string, FileMessage, ICopyOperation> copyOperationFactory,
             Func<string, string, IRenameOperation> renameOperationFactory,
-            Func<ICopyOperation, ISynchronizationOperation> synchronizationOperationFactory)
+            Func<ICopyOperation, ISynchronizationOperation> synchronizationOperationFactory,
+            string destinationPath)
         {
             _copyOperationFactory = copyOperationFactory;
             _renameOperationFactory = renameOperationFactory;
             _synchronizationOperationFactory = synchronizationOperationFactory;
-            _destinationPath = string.Empty;
+            _destinationPath = destinationPath;
         }
 
         public IOperation Create(FileMessage message)

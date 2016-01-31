@@ -30,6 +30,8 @@ namespace MessageQueues.CentralHost.Core
 
         public void Process(IEnumerable<BasicSerializedDeliveryEventArgs<FileMessage>> operations)
         {
+            _logger.Trace("[Start]: Start file batch processing.");
+
             var groupedOperations = operations.GroupBy(p => p.Body.FileName);
 
             IList<Task> processingOperations = new List<Task>();
@@ -53,6 +55,10 @@ namespace MessageQueues.CentralHost.Core
                 {
                     _logger.Error(ex.InnerExceptions[i]);
                 }
+            }
+            finally
+            {
+                _logger.Trace("[End]: End file batch processing.");
             }
         }
     }

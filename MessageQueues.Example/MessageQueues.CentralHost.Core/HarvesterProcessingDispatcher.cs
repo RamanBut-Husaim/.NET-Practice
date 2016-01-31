@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using MessageQueues.Core.Events;
 using MessageQueues.Core.Messages;
 
+using NLog;
+
 namespace MessageQueues.CentralHost.Core
 {
     public sealed class HarvesterProcessingDispatcher : IHarvesterProcessingDispatcher, IDisposable
@@ -17,18 +19,20 @@ namespace MessageQueues.CentralHost.Core
         private readonly ManualResetEventSlim _shutdownEvent;
         private readonly Queue<BasicSerializedDeliveryEventArgs<FileMessage>> _operationQueue;
         private readonly Func<IFileBatchManager> _fileBatchManagerFactory;
+        private readonly ILogger _logger;
         private readonly Task _dispatcher;
 
         private bool _disposed;
 
-        public HarvesterProcessingDispatcher(Func<IFileBatchManager> fileBatchManagerFactory, string harvesterName)
+        public HarvesterProcessingDispatcher(ILogger logger, Func<IFileBatchManager> fileBatchManagerFactory, string harvesterName)
         {
+            _logger = logger;
             _harvesterName = harvesterName;
             _fileBatchManagerFactory = fileBatchManagerFactory;
 
             _operationQueue = new Queue<BasicSerializedDeliveryEventArgs<FileMessage>>();
             _shutdownEvent = new ManualResetEventSlim(false);
-            _disposed = true;
+            _shutdownEvent.Reset();
 
             _dispatcher = new Task(this.Processing, TaskCreationOptions.LongRunning);
             _dispatcher.Start();
@@ -51,12 +55,15 @@ namespace MessageQueues.CentralHost.Core
 
             this.GuardDisposed();
 
+            _logger.Trace("[Start]: Harvester [{0}] enqueue operation with message ID {1}", _harvesterName, operation.BasicProperties.MessageId);
             lock (_syncObject)
             {
                 _operationQueue.Enqueue(operation);
 
                 Monitor.Pulse(_syncObject);
             }
+
+            _logger.Trace("[End]: Harvester [{0}] enqueue operation with message ID {1}", _harvesterName, operation.BasicProperties.MessageId);
         }
 
         public async Task CompleteAsync()
@@ -70,6 +77,8 @@ namespace MessageQueues.CentralHost.Core
 
         private void Processing()
         {
+            _logger.Trace("[Start]: Harvester [{0}] start processing", _harvesterName);
+
             while (true)
             {
                 IEnumerable<BasicSerializedDeliveryEventArgs<FileMessage>> operations;
@@ -80,6 +89,7 @@ namespace MessageQueues.CentralHost.Core
                     {
                         if (_shutdownEvent.IsSet)
                         {
+                            _logger.Trace("[End]: Harvester [{0}] start processing", _harvesterName);
                             return;
                         }
 
@@ -114,6 +124,7 @@ namespace MessageQueues.CentralHost.Core
         {
             lock (_syncObject)
             {
+                _logger.Trace("[Start]: Harvester [{0}] disposing", _harvesterName);
                 if (!_disposed)
                 {
                     if (disposing)
@@ -123,6 +134,8 @@ namespace MessageQueues.CentralHost.Core
 
                     _disposed = true;
                 }
+
+                _logger.Trace("[End]: Harvester [{0}] disposing", _harvesterName);
             }
         }
     }

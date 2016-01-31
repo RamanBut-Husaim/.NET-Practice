@@ -48,16 +48,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChannelProvider.cs" />
+    <Compile Include="ChannelProviderFactory.cs" />
     <Compile Include="FileBatchManager.cs" />
     <Compile Include="FileMessageDispatcher.cs" />
+    <Compile Include="FileMessageDispatcherFactory.cs" />
     <Compile Include="FileMessageListenerService.cs" />
     <Compile Include="FileOperations\Copy\CopyOperation.cs" />
     <Compile Include="FileOperations\FileOperationProcessor.cs" />
+    <Compile Include="FileOperations\LoggingFileOperationProcessor.cs" />
     <Compile Include="FileOperations\OperationFactory.cs" />
     <Compile Include="FileOperations\Rename\RenameOperation.cs" />
     <Compile Include="FileOperations\Synchronization\SynchronizationOperation.cs" />
+    <Compile Include="FileTransferManagerFactory.cs" />
     <Compile Include="HarvesterProcessingDispatcher.cs" />
     <Compile Include="HarvesterProcessingDispatcherFactory.cs" />
+    <Compile Include="IChannelProvider.cs" />
     <Compile Include="IFileBatchManager.cs" />
     <Compile Include="FileOperations\IFileOperationProcessor.cs" />
     <Compile Include="IFileMessageDispatcher.cs" />

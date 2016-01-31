@@ -12,7 +12,9 @@ namespace MessageQueues.CentralHost.Core.FileOperations
         private readonly IFileTransferManager _fileTransferManager;
         private readonly OperationFactory _operationFactory;
 
-        public FileOperationProcessor(IFileTransferManager fileTransferManager, OperationFactory operationFactory)
+        public FileOperationProcessor(
+            IFileTransferManager fileTransferManager,
+            OperationFactory operationFactory)
         {
             _fileTransferManager = fileTransferManager;
             _operationFactory = operationFactory;

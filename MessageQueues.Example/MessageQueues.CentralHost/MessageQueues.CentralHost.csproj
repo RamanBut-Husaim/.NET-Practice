@@ -64,6 +64,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CentralHostServiceConfiguration.cs" />
+    <Compile Include="CentralHostServiceFactory.cs" />
     <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="Configuration\ApplicationArguments.cs" />
     <Compile Include="Configuration\ApplicationArgumentsConfiguration.cs" />

@@ -1,11 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
-using MessageQueues.Core;
-using MessageQueues.Core.Messages;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
+﻿using System.ServiceProcess;
+
+using Fclp;
+
+using LightInject;
+
+using MessageQueues.CentralHost.Configuration;
+
+using NLog;
 
 namespace MessageQueues.CentralHost
 {
@@ -13,39 +14,38 @@ namespace MessageQueues.CentralHost
     {
         public static void Main(string[] args)
         {
-            var factory = new ConnectionFactory()
-            {
-                HostName = "localhost"
-            };
+            var argumentParser = ApplicationArgumentsConfiguration.CreateCommandLineParser();
 
-            using (var connection = factory.CreateConnection())
+            ICommandLineParserResult parseResult = argumentParser.Parse(args);
+
+            if (!parseResult.HasErrors && !parseResult.EmptyArgs)
             {
-                using (var channel = connection.CreateModel())
+                var configuration = CreateConfiguration(argumentParser.Object);
+                ConfigurationProvider.Instance.Configuration = configuration;
+
+                using (var serviceContainer = new ServiceContainer())
                 {
-                    Console.WriteLine("Setup Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-                    channel.QueueDeclare(Queues.Files, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                    serviceContainer.RegisterFrom<CompositionRoot>();
+                    var factory = serviceContainer.GetInstance<CentralHostServiceFactory>();
 
-                    var consumer = new EventingBasicConsumer(channel);
+                    CentralHostService service = factory.Create(configuration);
 
-                    consumer.Received += (sender, eventArgs) =>
-                    {
-                        Console.WriteLine("Handler Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-                        var body = eventArgs.Body;
+                    var logger = serviceContainer.GetInstance<ILogger>();
 
-                        using (var memoryStream = new MemoryStream(body))
-                        {
-                            var binaryFormatter =new BinaryFormatter();
-                            var message = binaryFormatter.Deserialize(memoryStream) as FileMessage;
-                            Console.WriteLine("harvester: {0} fileName: {1} operationType: {2}", message.Harvester, message.FileName, message.OperationType);
-                        }
-                    };
-
-                    channel.BasicConsume(Queues.Files, noAck: true, consumer: consumer);
-
-                    Console.WriteLine(" Press [enter] to exit.");
-                    Console.ReadLine();
+                    logger.Trace("[Before Service base run]");
+                    ServiceBase.Run(service);
+                    logger.Trace("[After Service base run]");
                 }
             }
+            else
+            {
+                argumentParser.HelpOption.ShowHelp(argumentParser.Options);
+            }
+        }
+
+        internal static CentralHostServiceConfiguration CreateConfiguration(ApplicationArguments arguments)
+        {
+            return new CentralHostServiceConfiguration(arguments.ServiceName, arguments.ResultFolder);
         }
     }
 }

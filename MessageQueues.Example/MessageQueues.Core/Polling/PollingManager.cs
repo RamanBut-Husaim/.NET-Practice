@@ -47,6 +47,10 @@ namespace MessageQueues.Core.Polling
                 {
                     _logger.Error("Polling number: {0}", i + 1);
                     _logger.Error(ex);
+                    if (i + 1 == _accessCount)
+                    {
+                        throw;
+                    }
                 }
 
                 if (!operationCompletedSuccessfully)

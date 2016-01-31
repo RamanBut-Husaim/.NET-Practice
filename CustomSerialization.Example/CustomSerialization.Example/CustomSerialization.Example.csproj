@@ -79,10 +79,14 @@
     <Compile Include="DB\Supplier.cs" />
     <Compile Include="DB\Territory.cs" />
     <Compile Include="Modified\Category.cs" />
+    <Compile Include="Modified\OrderDetailSerializationSurrogate.cs" />
+    <Compile Include="Modified\OrderSerializationSurrogate.cs" />
+    <Compile Include="Modified\Order_Detail.cs" />
     <Compile Include="Modified\Product.cs" />
     <Compile Include="Modified\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializationSolutions.cs" />
+    <Compile Include="TestHelpers\BinarySerializerTester.cs" />
     <Compile Include="TestHelpers\MemberNameHelper.cs" />
     <Compile Include="TestHelpers\SerializationTester.cs" />
     <Compile Include="TestHelpers\XmlDataContractSerializerTester.cs" />

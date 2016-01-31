@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using CustomSerialization.Example.DB;
+using CustomSerialization.Example.Modified;
 using CustomSerialization.Example.TestHelpers;
+
+using System.Data.Entity;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -21,7 +25,6 @@ namespace CustomSerialization.Example
         {
             _testOutputHelper = testOutputHelper;
             _dbContext = new Northwind();
-            //_dbContext.Configuration.ProxyCreationEnabled = false;
         }
 
         [Fact]
@@ -61,18 +64,30 @@ namespace CustomSerialization.Example
             var deserializedOrders = tester.SerializeAndDeserialize(products);
         }
 
-
         [Fact]
         public void ISerializationSurrogate()
         {
-            var tester = new XmlDataContractSerializerTester<IEnumerable<Order_Detail>>(
+            bool oldSetting = _dbContext.Configuration.ProxyCreationEnabled;
+
+            _dbContext.Configuration.ProxyCreationEnabled = false;
+            var surrogateSelector = new SurrogateSelector();
+            surrogateSelector.AddSurrogate(typeof(Order_Detail), new StreamingContext(StreamingContextStates.All), new OrderDetailSerializationSurrogate());
+            surrogateSelector.AddSurrogate(typeof(Order), new StreamingContext(StreamingContextStates.All), new OrderSerializationSurrogate());
+
+            var tester = new BinarySerializerTester<IEnumerable<Order_Detail>>(
                 _testOutputHelper,
-                new DataContractSerializer(typeof(IEnumerable<Order_Detail>)),
-                true);
+                new BinaryFormatter(surrogateSelector, new StreamingContext()),
+                false);
 
-            var orderDetails = _dbContext.Order_Details.ToList();
+            var orderDetails = _dbContext.Order_Details
+                .Include(p => p.Product)
+                .Include(p => p.Order)
+                .Take(100)
+                .ToList();
 
-            tester.SerializeAndDeserialize(orderDetails);
+            var deserializedOrderDetails = tester.SerializeAndDeserialize(orderDetails);
+
+            _dbContext.Configuration.ProxyCreationEnabled = oldSetting;
         }
 
         [Fact]

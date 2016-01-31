@@ -6,6 +6,19 @@ namespace CustomSerialization.Example.DB
     [Table("Order Details")]
     public partial class Order_Detail
     {
+        public Order_Detail()
+        {
+        }
+
+        public Order_Detail(Order_Detail other)
+        {
+            this.OrderID = other.OrderID;
+            this.ProductID = other.ProductID;
+            this.UnitPrice = other.UnitPrice;
+            this.Quantity = other.Quantity;
+            this.Discount = other.Discount;
+        }
+
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

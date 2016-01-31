@@ -12,6 +12,21 @@ namespace CustomSerialization.Example.DB
             this.CustomerDemographics = new HashSet<CustomerDemographic>();
         }
 
+        public Customer(Customer other) : this()
+        {
+            this.CustomerID = other.CustomerID;
+            this.CompanyName = other.CompanyName;
+            this.CompanyName = other.ContactName;
+            this.ContactTitle = other.ContactTitle;
+            this.Address = other.Address;
+            this.City = other.City;
+            this.Region = other.Region;
+            this.PostalCode = other.PostalCode;
+            this.Country = other.Country;
+            this.Phone = other.Phone;
+            this.Fax = other.Fax;
+        }
+
         [StringLength(5)]
         public string CustomerID { get; set; }
 

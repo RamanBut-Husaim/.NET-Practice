@@ -93,14 +93,20 @@ namespace CustomSerialization.Example
         [Fact]
         public void IDataContractSurrogate()
         {
+            var settings = new DataContractSerializerSettings
+            {
+                DataContractResolver = new ProxyDataContractResolver(),
+                DataContractSurrogate = new OrderDataContractSurrogate(),
+            };
+
             var tester = new XmlDataContractSerializerTester<IEnumerable<Order>>(
                 _testOutputHelper,
-                new DataContractSerializer(typeof(IEnumerable<Order>)),
+                new DataContractSerializer(typeof(IEnumerable<Order>), settings),
                 true);
 
-            var orders = _dbContext.Orders.ToList();
+            var orders = _dbContext.Orders.Take(10).ToList();
 
-            tester.SerializeAndDeserialize(orders);
+            var deserializedOrders = tester.SerializeAndDeserialize(orders);
         }
     }
 }

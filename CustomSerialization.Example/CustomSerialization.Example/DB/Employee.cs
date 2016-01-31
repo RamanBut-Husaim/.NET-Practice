@@ -15,6 +15,28 @@ namespace CustomSerialization.Example.DB
             this.Territories = new HashSet<Territory>();
         }
 
+        public Employee(Employee other)
+        {
+            this.EmployeeID = other.EmployeeID;
+            this.LastName = other.LastName;
+            this.FirstName = other.FirstName;
+            this.Title = other.Title;
+            this.TitleOfCourtesy = other.TitleOfCourtesy;
+            this.BirthDate = other.BirthDate;
+            this.HireDate = other.HireDate;
+            this.Address = other.Address;
+            this.City = other.City;
+            this.Region = other.Region;
+            this.PostalCode = other.PostalCode;
+            this.Country = other.Country;
+            this.HomePhone = other.HomePhone;
+            this.Extension = other.Extension;
+            this.Photo = other.Photo;
+            this.Notes = other.Notes;
+            this.ReportsTo = other.ReportsTo;
+            this.PhotoPath = other.PhotoPath;
+        }
+
         public int EmployeeID { get; set; }
 
         [Required]

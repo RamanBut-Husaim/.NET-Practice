@@ -25,25 +25,26 @@ namespace CustomSerialization.Example.TestHelpers
 
         public TData SerializeAndDeserialize(TData data)
         {
-            var stream = new MemoryStream();
-
-            _testOutputHelper.WriteLine("Start serialization");
-            this.Serialization(data, stream);
-            _testOutputHelper.WriteLine("Serialization finished");
-
-            if (_showResult)
+            using (var stream = new MemoryStream())
             {
-                var r = Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int) stream.Length);
-                _testOutputHelper.WriteLine(r);
+                _testOutputHelper.WriteLine("Start serialization");
+                this.Serialization(data, stream);
+                _testOutputHelper.WriteLine("Serialization finished");
+
+                if (_showResult)
+                {
+                    var r = Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int) stream.Length);
+                    _testOutputHelper.WriteLine(r);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                _testOutputHelper.WriteLine("Start deserialization");
+                TData result = this.Deserialization(stream);
+                _testOutputHelper.WriteLine("Deserialization finished");
+
+                return result;
             }
-
-            stream.Seek(0, SeekOrigin.Begin);
-
-            _testOutputHelper.WriteLine("Start deserialization");
-            TData result = this.Deserialization(stream);
-            _testOutputHelper.WriteLine("Deserialization finished");
-
-            return result;
         }
 
         internal abstract TData Deserialization(MemoryStream stream);

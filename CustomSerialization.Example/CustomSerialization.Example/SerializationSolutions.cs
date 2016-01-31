@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -25,14 +26,19 @@ namespace CustomSerialization.Example
         [Fact]
         public void SerializationEvents()
         {
+            var settings = new DataContractSerializerSettings
+            {
+                DataContractResolver = new ProxyDataContractResolver()
+            };
+
             var tester = new XmlDataContractSerializerTester<IEnumerable<Category>>(
                 _testOutputHelper,
-                new DataContractSerializer(typeof (IEnumerable<Category>)),
+                new DataContractSerializer(typeof (IEnumerable<Category>), settings),
                 true);
 
-            var categories = _dbContext.Categories.ToList();
+            List<Category> categories = _dbContext.Categories.ToList();
 
-            tester.SerializeAndDeserialize(categories);
+            var deserializedCategories = tester.SerializeAndDeserialize(categories).ToList();
         }
 
         [Fact]

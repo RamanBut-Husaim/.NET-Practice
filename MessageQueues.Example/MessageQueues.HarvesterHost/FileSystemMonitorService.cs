@@ -4,8 +4,10 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MessageQueues.HarvesterHost.Core.Services;
 using MessageQueues.HarvesterHost.Core.Watching;
+
 using NLog;
 
 namespace MessageQueues.HarvesterHost
@@ -21,7 +23,7 @@ namespace MessageQueues.HarvesterHost
         private readonly IFolderWatcher _folderWatcher;
         private readonly Func<IFileService> _fileServiceFactory;
         private readonly SynchronizationServiceFactory _synchronizationServiceFactory;
-        private readonly FileSystemMonitorServiceConfiguration _configuration;
+        private readonly ServiceConfiguration _configuration;
 
         private readonly ManualResetEventSlim _serviceShutdownEvent;
         private readonly Task _fileProcessingRoutine;
@@ -30,7 +32,7 @@ namespace MessageQueues.HarvesterHost
         private bool _disposed;
 
         public FileSystemMonitorService(
-            FileSystemMonitorServiceConfiguration configuration,
+            ServiceConfiguration configuration,
             IFolderWatcherFactory folderWatcherFactory,
             Func<IFileService> fileServiceFactory,
             SynchronizationServiceFactory synchronizationServiceFactory,
@@ -51,7 +53,7 @@ namespace MessageQueues.HarvesterHost
             this.InitializeServiceState(configuration);
         }
 
-        private void InitializeServiceState(FileSystemMonitorServiceConfiguration configuration)
+        private void InitializeServiceState(ServiceConfiguration configuration)
         {
             this.CanStop = true;
             this.AutoLog = false;
@@ -139,10 +141,10 @@ namespace MessageQueues.HarvesterHost
 
         private void PerformSynchronization()
         {
-            //ISynchronizationService synchronizationService = _synchronizationServiceFactory.Create(
-            //    _configuration.FolderToMonitor);
+            ISynchronizationService synchronizationService = _synchronizationServiceFactory.Create(
+                _configuration.FolderToMonitor);
 
-            //synchronizationService.PerformSynchronization().Wait();
+            synchronizationService.PerformSynchronization().Wait();
         }
 
         private void ProcessOperations(IList<FileSystemWatcherEventArgs> operations)

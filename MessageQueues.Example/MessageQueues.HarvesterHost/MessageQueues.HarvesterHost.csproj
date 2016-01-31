@@ -60,13 +60,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="Configuration\ApplicationArguments.cs" />
     <Compile Include="Configuration\ApplicationArgumentsConfigurationSetup.cs" />
     <Compile Include="Configuration\CompositionRoot.cs" />
     <Compile Include="FileSystemMonitorService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FileSystemMonitorServiceConfiguration.cs" />
+    <Compile Include="ServiceConfiguration.cs" />
     <Compile Include="FileSystemMonitorServiceFactory.cs" />
     <Compile Include="IFileSystemMonitorServiceFactory.cs" />
     <Compile Include="LoggingFileSystemMonitorServiceFactory.cs" />

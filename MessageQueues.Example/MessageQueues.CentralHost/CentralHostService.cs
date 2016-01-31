@@ -16,7 +16,7 @@ namespace MessageQueues.CentralHost
         private readonly ILogger _logger;
 
         private readonly ManualResetEventSlim _shutdownEvent;
-        private readonly CentralHostServiceConfiguration _centralHostServiceConfiguration;
+        private readonly ServiceConfiguration _centralHostServiceConfiguration;
         private readonly FileMessageListenerService _fileMessageListenerService;
 
         private readonly Task _processingRoutine;
@@ -26,7 +26,7 @@ namespace MessageQueues.CentralHost
         public CentralHostService(
             ILogger logger,
             FileMessageListenerService fileMessageListenerService,
-            CentralHostServiceConfiguration centralHostServiceConfiguration)
+            ServiceConfiguration centralHostServiceConfiguration)
         {
             _logger = logger;
 
@@ -38,7 +38,7 @@ namespace MessageQueues.CentralHost
             this.InitializeServiceState(centralHostServiceConfiguration);
         }
 
-        private void InitializeServiceState(CentralHostServiceConfiguration configuration)
+        private void InitializeServiceState(ServiceConfiguration configuration)
         {
             this.CanStop = true;
             this.AutoLog = false;

@@ -13,7 +13,7 @@ namespace MessageQueues.HarvesterHost
             _logger = logger;
         }
 
-        public FileSystemMonitorService Create(FileSystemMonitorServiceConfiguration configuration)
+        public FileSystemMonitorService Create(ServiceConfiguration configuration)
         {
             _logger.Log(LogLevel.Trace, "[Start]: File system monitor service creation");
             var fileSystemMonitorService = _fileSystemMonitorServiceFactory.Create(configuration);

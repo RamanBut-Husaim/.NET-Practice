@@ -7,11 +7,16 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
     {
         private readonly IConnectionManager _connectionManager;
         private readonly SerializationAssistantFactory _serializationAssistantFactory;
+        private readonly string _harvesterName;
 
-        public FileSenderFactory(IConnectionManager connectionManager, SerializationAssistantFactory serializationAssistantFactory)
+        public FileSenderFactory(
+            IConnectionManager connectionManager,
+            SerializationAssistantFactory serializationAssistantFactory,
+            string harvesterName)
         {
             _connectionManager = connectionManager;
             _serializationAssistantFactory = serializationAssistantFactory;
+            _harvesterName = harvesterName;
         }
 
         public IFileSender Create()
@@ -19,7 +24,7 @@ namespace MessageQueues.HarvesterHost.Core.FileOperations
             IModel channel = _connectionManager.GetChannel();
 
             var transferManager = new FileTransferManager(_serializationAssistantFactory.Create(), channel, Queues.Files);
-            var fileSender = new FileSender(transferManager, "harvester");
+            var fileSender = new FileSender(transferManager, _harvesterName);
 
             return fileSender;
         }

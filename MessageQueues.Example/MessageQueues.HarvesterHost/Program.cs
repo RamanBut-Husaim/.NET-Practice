@@ -1,7 +1,11 @@
 ﻿using System.ServiceProcess;
+
 using Fclp;
+
 using LightInject;
+
 using MessageQueues.HarvesterHost.Configuration;
+
 using NLog;
 
 namespace MessageQueues.HarvesterHost
@@ -16,11 +20,13 @@ namespace MessageQueues.HarvesterHost
 
             if (!parseResult.HasErrors && !parseResult.EmptyArgs)
             {
+                ServiceConfiguration configuration = CreateConfiguration(argumentParser.Object);
+                ConfigurationProvider.Instance.Configuration = configuration;
+
                 using (var serviceContainer = new ServiceContainer())
                 {
                     serviceContainer.RegisterFrom<CompositionRoot>();
                     IFileSystemMonitorServiceFactory factory = serviceContainer.GetInstance<IFileSystemMonitorServiceFactory>(CompositionRoot.LoggingFileSystemMonitorServiceFactory);
-                    FileSystemMonitorServiceConfiguration configuration = CreateConfiguration(argumentParser.Object);
 
                     var logger = serviceContainer.GetInstance<ILogger>();
                     logger.Log(LogLevel.Trace, "From: {0}", configuration.FolderToMonitor);
@@ -36,9 +42,9 @@ namespace MessageQueues.HarvesterHost
             }
         }
 
-        internal static FileSystemMonitorServiceConfiguration CreateConfiguration(ApplicationArguments arguments)
+        internal static ServiceConfiguration CreateConfiguration(ApplicationArguments arguments)
         {
-            return new FileSystemMonitorServiceConfiguration(arguments.FolderToMonitor, arguments.ServiceName);
+            return new ServiceConfiguration(arguments.FolderToMonitor, arguments.ServiceName, arguments.HostName);
         }
     }
 }

@@ -58,3 +58,6 @@
 не выполняет полезную работу, а служит только диспетчером.
 Т.е. запускает требуемое количество процессов обработки, перезапускает, если процесс падает и
 корректно останавливает (а не убивает!) если останавливают саму службу.
+
+sc.exe create HarvesterHost binPath="{HarvesterPath} --i C:\Monitor\from --h Harvester --n HarvesterHost"
+sc.exe create HarvesterCentralHost binPath="{CentralPath} --o C:\Monitor\to --n HarvesterCentralHost"

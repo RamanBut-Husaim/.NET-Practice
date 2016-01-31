@@ -90,7 +90,7 @@ namespace MessageQueues.CentralHost.Configuration
                 ConfigurationProvider.Instance.Configuration.ResultFolder), new PerContainerLifetime());
 
             serviceRegistry.Register<CentralHostServiceFactory>(new PerContainerLifetime());
-            serviceRegistry.Register<CentralHostServiceConfiguration, CentralHostService>(
+            serviceRegistry.Register<ServiceConfiguration, CentralHostService>(
                 (factory, configuration) => new CentralHostService(
                     factory.GetInstance<ILogger>(),
                     factory.GetInstance<FileMessageListenerService>(),

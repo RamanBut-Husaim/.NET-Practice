@@ -3,7 +3,6 @@
 using LightInject;
 
 using MessageQueues.Core;
-using MessageQueues.Core.Operations;
 using MessageQueues.Core.Operations.Copy;
 using MessageQueues.Core.Operations.Rename;
 using MessageQueues.Core.Operations.Synchronization;
@@ -26,7 +25,7 @@ namespace MessageQueues.HarvesterHost.Configuration
 
         public void Compose(IServiceRegistry serviceRegistry)
         {
-            serviceRegistry.Register<FileSystemMonitorServiceConfiguration, FileSystemMonitorService>(
+            serviceRegistry.Register<ServiceConfiguration, FileSystemMonitorService>(
                 (factory, configuration) =>
                     new FileSystemMonitorService(
                         configuration,
@@ -35,8 +34,8 @@ namespace MessageQueues.HarvesterHost.Configuration
                         factory.GetInstance<SynchronizationServiceFactory>(),
                         factory.GetInstance<ILogger>()));
 
-            serviceRegistry.Register<string, string, ISynchronizationService>(
-                (factory, sourcePath, destinationPath) =>
+            serviceRegistry.Register<string, ISynchronizationService>(
+                (factory, sourcePath) =>
                     new SynchronizationService(
                         sourcePath,
                         factory.GetInstance<Func<IFileOperationManager>>(),
@@ -76,7 +75,13 @@ namespace MessageQueues.HarvesterHost.Configuration
 
             serviceRegistry.Register<IFileService, FileService>();
             serviceRegistry.Register<IFileOperationManager, FileOperationManager>();
-            serviceRegistry.Register<FileSenderFactory>(new PerContainerLifetime());
+            serviceRegistry.Register<FileSenderFactory>((factory) =>
+                new FileSenderFactory(
+                    factory.GetInstance<IConnectionManager>(),
+                    factory.GetInstance<SerializationAssistantFactory>(),
+                    ConfigurationProvider.Instance.Configuration.HarvesterName),
+                new PerContainerLifetime());
+
             serviceRegistry.Register<ConnectionManagerFactory>(new PerContainerLifetime());
             serviceRegistry.Register<SerializationAssistantFactory>(new PerContainerLifetime());
             serviceRegistry.Register<IConnectionManager>(factory => factory.GetInstance<ConnectionManagerFactory>().Create(), new PerContainerLifetime());

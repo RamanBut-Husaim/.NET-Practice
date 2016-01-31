@@ -43,9 +43,9 @@ namespace MessageQueues.CentralHost
             }
         }
 
-        internal static CentralHostServiceConfiguration CreateConfiguration(ApplicationArguments arguments)
+        internal static ServiceConfiguration CreateConfiguration(ApplicationArguments arguments)
         {
-            return new CentralHostServiceConfiguration(arguments.ServiceName, arguments.ResultFolder);
+            return new ServiceConfiguration(arguments.ServiceName, arguments.ResultFolder);
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IFileSystemMonitorServiceFactory
     {
-        FileSystemMonitorService Create(FileSystemMonitorServiceConfiguration configuration);
+        FileSystemMonitorService Create(ServiceConfiguration configuration);
     }
 }

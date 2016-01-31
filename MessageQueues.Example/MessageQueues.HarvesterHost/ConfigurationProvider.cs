@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace MessageQueues.CentralHost
+namespace MessageQueues.HarvesterHost
 {
     public sealed class ConfigurationProvider
     {
-
         private static readonly Lazy<ConfigurationProvider> _instance = new Lazy<ConfigurationProvider>(() => new ConfigurationProvider());
 
         private ConfigurationProvider()

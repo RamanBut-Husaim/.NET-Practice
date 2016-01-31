@@ -4,14 +4,14 @@ namespace MessageQueues.HarvesterHost
 {
     public sealed class FileSystemMonitorServiceFactory : IFileSystemMonitorServiceFactory
     {
-        private readonly Func<FileSystemMonitorServiceConfiguration, FileSystemMonitorService> _factory;
+        private readonly Func<ServiceConfiguration, FileSystemMonitorService> _factory;
 
-        public FileSystemMonitorServiceFactory(Func<FileSystemMonitorServiceConfiguration, FileSystemMonitorService> factory)
+        public FileSystemMonitorServiceFactory(Func<ServiceConfiguration, FileSystemMonitorService> factory)
         {
             _factory = factory;
         }
 
-        public FileSystemMonitorService Create(FileSystemMonitorServiceConfiguration configuration)
+        public FileSystemMonitorService Create(ServiceConfiguration configuration)
         {
             return _factory.Invoke(configuration);
         }

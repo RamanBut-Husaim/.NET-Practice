@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -44,14 +45,20 @@ namespace CustomSerialization.Example
         [Fact]
         public void ISerializable()
         {
+            var settings = new DataContractSerializerSettings
+            {
+                DataContractResolver = new ProxyDataContractResolver(),
+                KnownTypes = new List<Type>() {typeof (Supplier)}
+            };
+
             var tester = new XmlDataContractSerializerTester<IEnumerable<Product>>(
                 _testOutputHelper,
-                new DataContractSerializer(typeof(IEnumerable<Product>)),
+                new DataContractSerializer(typeof (IEnumerable<Product>), settings),
                 true);
 
             var products = _dbContext.Products.ToList();
 
-            tester.SerializeAndDeserialize(products);
+            var deserializedOrders = tester.SerializeAndDeserialize(products);
         }
 
 

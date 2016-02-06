@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedXml.Example.Xsd", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedXml.Example.Xsd.Tests", "AdvancedXml.Example.Xsd.Tests\AdvancedXml.Example.Xsd.Tests.csproj", "{7AE0C552-C488-492C-BD9C-33AD3EEBA12F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedXml.Example.Atom", "AdvancedXml.Example.Atom\AdvancedXml.Example.Atom.csproj", "{EDD2F399-4F78-4964-B519-4291F0B7F222}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7AE0C552-C488-492C-BD9C-33AD3EEBA12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AE0C552-C488-492C-BD9C-33AD3EEBA12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AE0C552-C488-492C-BD9C-33AD3EEBA12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDD2F399-4F78-4964-B519-4291F0B7F222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDD2F399-4F78-4964-B519-4291F0B7F222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDD2F399-4F78-4964-B519-4291F0B7F222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDD2F399-4F78-4964-B519-4291F0B7F222}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,7 +18,7 @@ namespace AdvancedXml.Example.Xsd.Tests
         [Fact]
         public void PerformValidation_WhenTheFileIsValid_Succeeded()
         {
-            var xmlValidator = new XmlValidator(LibrarySchemaFileName, TargetNamespace);
+            var xmlValidator = this.CreateValidator();
 
             var validationResult = xmlValidator.PerformValidation("books.xml");
 
@@ -28,16 +28,22 @@ namespace AdvancedXml.Example.Xsd.Tests
         [Fact]
         public void PerformValidation_WhenTheFileIsInvalid_Failed()
         {
-            var xmlValidator = new XmlValidator(LibrarySchemaFileName, TargetNamespace);
+            var xmlValidator = this.CreateValidator();
 
             var validationResult = xmlValidator.PerformValidation("books_invalid.xml");
 
             foreach (var validationResultEntry in validationResult.Errors)
             {
-                _textOutputHelper.WriteLine(validationResultEntry.Message);
+                _textOutputHelper.WriteLine("Book: {0}", validationResultEntry.MarkerElementValue);
+                _textOutputHelper.WriteLine("Message: {0}", validationResultEntry.Message);
             }
 
             Assert.False(validationResult.Success);
+        }
+
+        private IXmlValidator CreateValidator()
+        {
+            return new XmlValidator(LibrarySchemaFileName, TargetNamespace, "book", "id");
         }
     }
 }

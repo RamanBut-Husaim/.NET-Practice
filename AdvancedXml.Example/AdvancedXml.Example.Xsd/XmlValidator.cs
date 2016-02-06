@@ -7,27 +7,46 @@ namespace AdvancedXml.Example.Xsd
     {
         private readonly string _schemaPath;
         private readonly string _targetNamespace;
+        private readonly string _markerElement;
+        private readonly string _markerAttribute;
 
-        public XmlValidator(string schemaPath, string targetNamespace)
+        public XmlValidator(
+            string schemaPath,
+            string targetNamespace,
+            string markerElement,
+            string markerAttribute)
         {
             _schemaPath = schemaPath;
             _targetNamespace = targetNamespace;
+            _markerElement = markerElement;
+            _markerAttribute = markerAttribute;
         }
 
         public ValidationResult PerformValidation(string filePath)
         {
             XmlReaderSettings settings = this.CreateSettings();
+            string markerAttributeValue = string.Empty;
 
             var validationResult = new ValidationResult();
             settings.ValidationEventHandler += (sender, args) =>
             {
-                validationResult.Errors.Add(new ValidationResultEntry(args.Message));
+                string attributeValue = new string(markerAttributeValue.ToCharArray());
+                validationResult.Errors.Add(new ValidationResultEntry(args.Message, attributeValue));
             };
 
             using (XmlReader reader = XmlReader.Create(filePath, settings))
             {
                 while (reader.Read())
                 {
+                    string elementName = reader.Name;
+                    if (_markerElement.Equals(elementName))
+                    {
+                        bool found = reader.MoveToAttribute(_markerAttribute);
+                        if (found)
+                        {
+                            markerAttributeValue = reader.ReadContentAsString() ?? string.Empty;
+                        }
+                    }
                 }
             }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Schema;
 
 namespace AdvancedXml.Example.Xsd
@@ -12,17 +10,12 @@ namespace AdvancedXml.Example.Xsd
 
         public XmlValidator(string schemaPath, string targetNamespace)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(schemaPath), "The path to the schema could not be empty");
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(targetNamespace), "The target namespace could not be empty");
-
             _schemaPath = schemaPath;
             _targetNamespace = targetNamespace;
         }
 
         public ValidationResult PerformValidation(string filePath)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(filePath), "The file path could not be empty.");
-
             XmlReaderSettings settings = this.CreateSettings();
 
             var validationResult = new ValidationResult();

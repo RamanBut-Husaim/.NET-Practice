@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
 
 namespace AdvancedXml.Example.Xsd.Tests
@@ -18,13 +13,31 @@ namespace AdvancedXml.Example.Xsd.Tests
         public XmlValidatorTests(ITestOutputHelper textOutputHelper)
         {
             _textOutputHelper = textOutputHelper;
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         }
 
         [Fact]
         public void PerformValidation_WhenTheFileIsValid_Succeeded()
         {
+            var xmlValidator = new XmlValidator(LibrarySchemaFileName, TargetNamespace);
 
+            var validationResult = xmlValidator.PerformValidation("books.xml");
+
+            Assert.True(validationResult.Success);
+        }
+
+        [Fact]
+        public void PerformValidation_WhenTheFileIsInvalid_Failed()
+        {
+            var xmlValidator = new XmlValidator(LibrarySchemaFileName, TargetNamespace);
+
+            var validationResult = xmlValidator.PerformValidation("books_invalid.xml");
+
+            foreach (var validationResultEntry in validationResult.Errors)
+            {
+                _textOutputHelper.WriteLine(validationResultEntry.Message);
+            }
+
+            Assert.False(validationResult.Success);
         }
     }
 }

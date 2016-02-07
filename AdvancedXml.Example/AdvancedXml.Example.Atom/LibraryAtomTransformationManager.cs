@@ -33,7 +33,7 @@ namespace AdvancedXml.Example.Atom
 
             using (var transformation = XmlReader.Create(_resourceStream.Value))
             {
-                compiledTransform.Load(transformation);
+                compiledTransform.Load(transformation, settings, null);
 
                 compiledTransform.Transform(inputFile, outputFile);
             }
